@@ -1,0 +1,37 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.exclude": {
+			"**/.git": true,
+			"**/.svn": true,
+			"**/.hg": true,
+			"**/CVS": true,
+			"**/.DS_Store": true,
+			"**/Thumbs.db": true,
+			"**/BRFood.code-workspace": true
+		},
+		"workbench.editor.customLabels.patterns": {
+			// "*.ts": "${basename} ${filename}",
+		},
+		"symbols.files.associations": {
+			"*.code-workspace": "capacitor",
+		},
+		"symbols.folders.associations": {
+			"infra": "folder-orange",
+			"application": "folder-purple",
+			"http": "folder-blue-outline",
+			"entities": "folder-green-outline",
+			"errors": "folder-red-outline",
+			"repositories": "folder-gray-outline",
+			"usecases": "folder-prisma",
+			"mappers": "folder-yellow-outline"
+		},
+		"[typescript]": {
+			"editor.formatOnSave": true
+		},
+	},
+}
