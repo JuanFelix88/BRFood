@@ -19,6 +19,8 @@
 		},
 		"symbols.files.associations": {
 			"*.code-workspace": "capacitor",
+			"middleware.ts": "http",
+			"route.ts": "http",
 		},
 		"symbols.folders.associations": {
 			"infra": "folder-orange",
@@ -33,5 +35,8 @@
 		"[typescript]": {
 			"editor.formatOnSave": true
 		},
+		"cSpell.words": [
+			"Dont"
+		],
 	},
 }
