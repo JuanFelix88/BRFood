@@ -1,29 +1,29 @@
 import { Usecase } from "@/src/shared/entities/Usecase"
-import { FeedstockRepository } from "../repositories/feedstock-repository"
+import { RawMaterialRepository } from "../repositories/raw-material-repository"
 import { PurchaseErrors } from "../errors/purchase"
 import { CurrencyValue } from "@/src/shared/entities/CurrencyValue"
 import { PurchaseRepository } from "../repositories/purchase-repository"
 import { AmountValue } from "@/src/shared/entities/AmountValue"
 
 interface AddPurchaseData {
-  feedstockId: number
+  rawMaterialId: number
   amountInt: number
   unitPriceInt: number
 }
 
 export class AddPurchase implements Usecase {
   constructor(
-    private readonly feedstockRepository: FeedstockRepository,
-    private readonly purchaseRepository: PurchaseRepository
+    public rawMaterialRepository: RawMaterialRepository,
+    public purchaseRepository: PurchaseRepository
   ) {}
 
   public async handle({
     amountInt,
-    feedstockId,
+    rawMaterialId,
     unitPriceInt,
   }: AddPurchaseData): Promise<void> {
-    if (!(await this.feedstockRepository.exists(feedstockId))) {
-      throw new PurchaseErrors.FeedstockNotFound(feedstockId)
+    if (!(await this.rawMaterialRepository.exists(rawMaterialId))) {
+      throw new PurchaseErrors.RawMaterialNotFound(rawMaterialId)
     }
 
     const unitPrice = new CurrencyValue(unitPriceInt)
@@ -36,6 +36,11 @@ export class AddPurchase implements Usecase {
 
     const cost = new CurrencyValue(unitPrice.int * amountValue.int)
 
-    await this.purchaseRepository.add(cost, unitPrice, amountValue, feedstockId)
+    await this.purchaseRepository.add(
+      cost,
+      unitPrice,
+      amountValue,
+      rawMaterialId
+    )
   }
 }

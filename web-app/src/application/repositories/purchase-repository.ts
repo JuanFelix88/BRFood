@@ -8,7 +8,7 @@ export abstract class PurchaseRepository {
     cost: CurrencyValue,
     unitPrice: CurrencyValue,
     amount: AmountValue,
-    feedstockId: number
+    rawMaterialId: number
   ): Promise<Purchase>
   public abstract get(id: number): Promise<Purchase>
   public abstract all(): Promise<Purchase[]>

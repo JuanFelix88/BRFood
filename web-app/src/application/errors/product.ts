@@ -2,6 +2,15 @@ import { AppError } from "@/src/shared/entities/AppError"
 import { Lang } from "@/src/shared/intl/lang"
 
 export namespace ProductErrors {
+  export class MissingInputName extends AppError {
+    constructor() {
+      super("Missing Input Name", {
+        [Lang.EN]: "Missing product name",
+        [Lang.PT_BR]: "Está faltando o nome do produto",
+      })
+    }
+  }
+
   export class InvalidInputName extends AppError {
     constructor() {
       super("Invalid Input Name", {

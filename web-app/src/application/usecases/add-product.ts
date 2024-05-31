@@ -4,48 +4,68 @@ import { ProductErrors } from "../errors/product"
 import { CurrencyValue } from "@/src/shared/entities/CurrencyValue"
 import { InternalImage } from "@/src/shared/entities/Image"
 import { CoverImageRepository } from "../repositories/cover-image-repository"
+import { UUID } from "@/src/shared/entities/UUID"
+import { AuthErrors } from "../errors/auth"
+import { UserRepository } from "../repositories/user-repository"
+import { Product } from "../entities/Product"
 
 interface AddProductData {
   name: string
-  priceInt: number
-  imgBase64?: string
-  extensionImage?: string
+  price: CurrencyValue
+  coverImage?: InternalImage
+  authorId: UUID
 }
 
 export class AddProduct implements Usecase {
   constructor(
-    private readonly productRepository: ProductRepository,
-    private readonly coverImageRepository: CoverImageRepository
+    public productRepository: ProductRepository,
+    public coverImageRepository: CoverImageRepository,
+    public userRepository: UserRepository
   ) {}
 
   public async handle({
+    authorId,
     name,
-    priceInt,
-    imgBase64,
-    extensionImage,
-  }: AddProductData): Promise<void> {
+    price,
+    coverImage,
+  }: AddProductData): Promise<Product> {
+    if (name === undefined) {
+      throw new ProductErrors.MissingInputName()
+    }
+
     if (name.length === 0 || name.length > 60) {
       throw new ProductErrors.InvalidInputName()
     }
 
-    const price = new CurrencyValue(priceInt)
-    const cover =
-      imgBase64 && extensionImage
-        ? InternalImage.fromBase64(imgBase64, "jpg")
-        : undefined
-
-    if (price.isNegative()) {
-      throw new ProductErrors.ProductPriceIsNegative(priceInt)
+    if (!(await this.userRepository.exists(authorId))) {
+      throw new AuthErrors.UserNotFoundError()
     }
 
-    const coverBucketImg = cover
-      ? await this.coverImageRepository.upload(cover)
-      : undefined
+    if (price.isNegative()) {
+      throw new ProductErrors.ProductPriceIsNegative(price.float)
+    }
 
-    await this.productRepository.add({
+    const {
+      id,
+      createdAt,
+      coverImage: coverImageBucket,
+    } = await this.productRepository.add({
       name,
       price,
-      coverBucketImg,
+      coverBucketImg:
+        coverImage !== undefined
+          ? await this.coverImageRepository.upload(coverImage)
+          : undefined,
     })
+
+    return {
+      id,
+      name,
+      price,
+      coverImage: coverImageBucket,
+      profit: price,
+      updatedAt: createdAt,
+      createdAt,
+    }
   }
 }

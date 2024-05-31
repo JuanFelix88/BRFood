@@ -11,7 +11,7 @@ namespace ProductRepository {
 }
 
 export abstract class ProductRepository {
-  public abstract add(payload: ProductRepository.AddPayload): Promise<void>
+  public abstract add(payload: ProductRepository.AddPayload): Promise<Product>
 
   /**
    * @throws When product not found

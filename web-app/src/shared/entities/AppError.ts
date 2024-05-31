@@ -5,8 +5,8 @@ type AppErrorProp = {
 }
 
 export class AppError extends Error {
-  constructor(name: string, prop: AppErrorProp) {
-    super(prop[Lang.EN])
+  constructor(name: string, public readonly props: AppErrorProp) {
+    super(props[Lang.EN])
     this.name = name
   }
 }

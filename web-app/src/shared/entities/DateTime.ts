@@ -1,4 +1,6 @@
-export class DateTime {
+import { Serializable } from "./Serializable"
+
+export class DateTime implements Serializable {
   protected formatter = new Intl.DateTimeFormat("pt-BR", {
     year: "numeric",
     month: "numeric",
@@ -23,10 +25,6 @@ export class DateTime {
     return new Date(this.value).toISOString()
   }
 
-  public toJson(): string {
-    return this.iso
-  }
-
   public toString(): string {
     return this.formatter.format(new Date(this.value)).replaceAll(",", "")
   }
@@ -35,7 +33,11 @@ export class DateTime {
     if (hint === "number") {
       return this.value
     }
-    
+
     return this.toString()
+  }
+
+  public toJSON(): string {
+    return this.iso
   }
 }

@@ -2,10 +2,10 @@ import { AppError } from "@/src/shared/entities/AppError"
 import { Lang } from "@/src/shared/intl/lang"
 
 export namespace PurchaseErrors {
-  export class FeedstockNotFound extends AppError {
+  export class RawMaterialNotFound extends AppError {
     constructor(id: number) {
-      super("Feedstock Not Found", {
-        [Lang.EN]: `The feedstock with id ${id} was not found`,
+      super("RawMaterial Not Found", {
+        [Lang.EN]: `The raw-material with id ${id} was not found`,
         [Lang.PT_BR]: `A matéria prima informada com o id ${id} não foi encontrada`,
       })
     }

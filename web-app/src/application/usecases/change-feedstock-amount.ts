@@ -1,21 +1,21 @@
 import { Usecase } from "@/src/shared/entities/Usecase"
-import { FeedstockRepository } from "../repositories/feedstock-repository"
+import { RawMaterialRepository } from "../repositories/raw-material-repository"
 import { AmountValue } from "@/src/shared/entities/AmountValue"
 
-export interface ChangeFeedstockAmountData {
-  feedstockId: number
+export interface ChangeRawMaterialAmountData {
+  rawMaterialId: number
   amountInt: number
 }
 
-export class ChangeFeedstockAmount implements Usecase {
-  constructor(private readonly feedstockRepository: FeedstockRepository) {}
+export class ChangeRawMaterialAmount implements Usecase {
+  constructor(public rawMaterialRepository: RawMaterialRepository) {}
 
   public async handle({
     amountInt,
-    feedstockId,
-  }: ChangeFeedstockAmountData): Promise<void> {
-    await this.feedstockRepository.addNewAmount(
-      feedstockId,
+    rawMaterialId,
+  }: ChangeRawMaterialAmountData): Promise<void> {
+    await this.rawMaterialRepository.addNewAmount(
+      rawMaterialId,
       new AmountValue(amountInt)
     )
   }

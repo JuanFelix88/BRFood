@@ -14,9 +14,9 @@ interface AddSaleData {
 
 export class AddSale implements Usecase {
   constructor(
-    private readonly saleRepository: SaleRepository,
-    private readonly productRepository: ProductRepository,
-    private readonly paymentMethodRepository: PaymentMethodRepository
+    public saleRepository: SaleRepository,
+    public productRepository: ProductRepository,
+    public paymentMethodRepository: PaymentMethodRepository
   ) {}
 
   public async handle({

@@ -1,11 +1,11 @@
 import { AppError } from "@/src/shared/entities/AppError"
 import { Lang } from "@/src/shared/intl/lang"
 
-export namespace FeedstockErrors {
+export namespace RawMaterialErrors {
   export class NameError extends AppError {
     constructor() {
-      super("Feedstock name error", {
-        [Lang.EN]: "Name of the feedstock is invalid for application",
+      super("RawMaterial name error", {
+        [Lang.EN]: "Name of the raw-material is invalid for application",
         [Lang.PT_BR]: "Nome da matéria prima é inválido para aplicação",
       })
     }
@@ -13,8 +13,8 @@ export namespace FeedstockErrors {
 
   export class AmountError extends AppError {
     constructor(count: number) {
-      super("Feedstock amount error", {
-        [Lang.EN]: `Amount of the feedstock is invalid for application: ${count}`,
+      super("RawMaterial amount error", {
+        [Lang.EN]: `Amount of the raw-material is invalid for application: ${count}`,
         [Lang.PT_BR]: `Quantidade da prima é inválida: ${count}`,
       })
     }
@@ -22,8 +22,8 @@ export namespace FeedstockErrors {
 
   export class AmountTypeError extends AppError {
     constructor() {
-      super("Feedstock amount type error", {
-        [Lang.EN]: "Amount type of the feedstock is invalid for application",
+      super("RawMaterial amount type error", {
+        [Lang.EN]: "Amount type of the raw-material is invalid for application",
         [Lang.PT_BR]: "Tipo de quantidade da prima é inválido para aplicação",
       })
     }
