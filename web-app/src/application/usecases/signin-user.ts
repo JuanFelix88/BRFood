@@ -5,10 +5,10 @@ import { Email } from "@/src/shared/entities/Email"
 import { AuthErrors } from "../errors/auth"
 
 export class SignInUser implements Usecase {
-  constructor(public authRepository: AuthRepository) {}
+  constructor(private readonly authRepository: AuthRepository) {}
 
-  public async handle(email: string, password: string): Promise<AuthToken> {
-    if (email === undefined || email.length === 0) {
+  public async handle(email: Email, password: string): Promise<AuthToken> {
+    if (email === undefined) {
       throw new AuthErrors.EmailCannotEmptyError()
     }
 
@@ -16,6 +16,6 @@ export class SignInUser implements Usecase {
       throw new AuthErrors.PasswordCannotEmptyError()
     }
 
-    return await this.authRepository.SignIn(new Email(email), password)
+    return await this.authRepository.SignIn(email, password)
   }
 }

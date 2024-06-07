@@ -7,16 +7,16 @@ import { PaymentMethodRepository } from "../repositories/paymentmethod-repositor
 import { CurrencyValue } from "@/src/shared/entities/CurrencyValue"
 
 interface AddSaleData {
-  products: { productId: number; amountInt: number }[]
-  paymentMethods: { paymentMethodId: number; valueInt: number }[]
+  products: { productId: number; amount: AmountValue }[]
+  paymentMethods: { paymentMethodId: number; value: CurrencyValue }[]
   note?: string
 }
 
 export class AddSale implements Usecase {
   constructor(
-    public saleRepository: SaleRepository,
-    public productRepository: ProductRepository,
-    public paymentMethodRepository: PaymentMethodRepository
+    private readonly saleRepository: SaleRepository,
+    private readonly productRepository: ProductRepository,
+    private readonly paymentMethodRepository: PaymentMethodRepository
   ) {}
 
   public async handle({
@@ -47,21 +47,13 @@ export class AddSale implements Usecase {
       throw new SaleErrors.TheListHastPaymentMethodNotFound()
     }
 
-    const checkedProducts = products.map(({ amountInt, ...product }) => ({
+    const checkedProducts = products.map(({ ...product }) => ({
       ...product,
-      amount: new AmountValue(amountInt),
       price: getProductPriceById(product.productId),
     }))
 
-    const checkedPaymentMethods = paymentMethods.map(
-      ({ valueInt, ...paymentMethod }) => ({
-        ...paymentMethod,
-        value: new CurrencyValue(valueInt),
-      })
-    )
-
     const sumPaymentMethodsValue = new CurrencyValue(
-      checkedPaymentMethods.reduce((acc, p) => acc + p.value.int, 0)
+      paymentMethods.reduce((acc, p) => acc + p.value.int, 0)
     )
 
     const sumProductsValue = new CurrencyValue(
@@ -73,7 +65,7 @@ export class AddSale implements Usecase {
     }
 
     await this.saleRepository.add({
-      paymentMethods: checkedPaymentMethods,
+      paymentMethods,
       products: checkedProducts,
       total: sumProductsValue,
       note,

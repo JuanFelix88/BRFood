@@ -1,7 +1,7 @@
 import { Product } from "@/src/application/entities/Product"
 import { AddProduct } from "@/src/application/usecases/add-product"
 import { vercelFactory } from "@/src/infra/factories/vercel"
-import { getAuthToken } from "@/src/shared/auth/get-token"
+import { AuthToken } from "@/src/shared/entities/AuthToken"
 import { CurrencyValue } from "@/src/shared/entities/CurrencyValue"
 import { Email } from "@/src/shared/entities/Email"
 import { InternalImage } from "@/src/shared/entities/Image"
@@ -33,7 +33,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const { name, priceInt, extensionImage, imgBase64 }: POST.Body =
       await req.json()
 
-    const authToken = await getAuthToken(req)
+    const authToken = AuthToken.getFromNextRequest(req)
 
     const productCreated = await addProduct.handle({
       name,
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       coverImage: imgBase64
         ? new InternalImage(imgBase64, extensionImage)
         : undefined,
-      authorId: new UUID(authToken.toJson()),
+      authorId: new UUID(authToken.toJSON()),
     })
 
     return NextResponse.json({

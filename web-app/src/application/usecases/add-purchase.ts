@@ -7,40 +7,31 @@ import { AmountValue } from "@/src/shared/entities/AmountValue"
 
 interface AddPurchaseData {
   rawMaterialId: number
-  amountInt: number
-  unitPriceInt: number
+  amount: AmountValue
+  unitPrice: CurrencyValue
 }
 
 export class AddPurchase implements Usecase {
   constructor(
-    public rawMaterialRepository: RawMaterialRepository,
-    public purchaseRepository: PurchaseRepository
+    private readonly rawMaterialRepository: RawMaterialRepository,
+    private readonly purchaseRepository: PurchaseRepository
   ) {}
 
   public async handle({
-    amountInt,
+    amount,
     rawMaterialId,
-    unitPriceInt,
+    unitPrice,
   }: AddPurchaseData): Promise<void> {
     if (!(await this.rawMaterialRepository.exists(rawMaterialId))) {
       throw new PurchaseErrors.RawMaterialNotFound(rawMaterialId)
     }
 
-    const unitPrice = new CurrencyValue(unitPriceInt)
-
     if (unitPrice.isNegative()) {
       throw new PurchaseErrors.UnitPriceIsNegative()
     }
 
-    const amountValue = new AmountValue(amountInt)
+    const cost = new CurrencyValue(unitPrice.int * amount.int)
 
-    const cost = new CurrencyValue(unitPrice.int * amountValue.int)
-
-    await this.purchaseRepository.add(
-      cost,
-      unitPrice,
-      amountValue,
-      rawMaterialId
-    )
+    await this.purchaseRepository.add(cost, unitPrice, amount, rawMaterialId)
   }
 }

@@ -1,5 +1,6 @@
 import { SignUpUser } from "@/src/application/usecases/signup-user"
 import { vercelFactory } from "@/src/infra/factories/vercel"
+import { Email } from "@/src/shared/entities/Email"
 import { MethodsExceptions } from "@/src/shared/utils/methods-exceptions"
 import { NextRequest, NextResponse } from "next/server"
 
@@ -21,7 +22,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       await req.json()
 
     const { authToken, company, user } = await singUpUser.handle({
-      email,
+      email: new Email(email),
       password,
       companyName,
       confirmPassword,
@@ -30,7 +31,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     return NextResponse.json(
       {
-        token: authToken.toJson(),
+        token: authToken,
         company,
         user,
       },

@@ -1,3 +1,7 @@
 import { createFactory } from "@/src/shared/utils/create-factory"
 
-export const vercelFactory = createFactory([])
+class VercelProductRepository {
+  constructor() {}
+}
+
+export const vercelFactory = createFactory([VercelProductRepository])

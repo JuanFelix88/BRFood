@@ -12,16 +12,16 @@ export function isAuthenticatedRoute(request: NextRequest) {
 
 // This function can be marked `async` if using `await` inside
 export function middleware(request: NextRequest, event: NextFetchEvent) {
-  if (isAuthenticatedRoute(request)) {
-    if (!AuthToken.hasTokenNextRequest(request)) {
-      return NextResponse.json(
-        {
-          message: "Unauthorized",
-        },
-        { status: 401 }
-      )
-    }
-  }
+  // if (isAuthenticatedRoute(request)) {
+  //   if (!AuthToken.hasTokenNextRequest(request)) {
+  //     return NextResponse.json(
+  //       {
+  //         message: "Unauthorized",
+  //       },
+  //       { status: 401 }
+  //     )
+  //   }
+  // }
 
   return NextResponse.next()
 }

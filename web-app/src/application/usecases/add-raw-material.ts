@@ -12,7 +12,7 @@ interface AddRawMaterialData {
 }
 
 export class AddRawMaterial implements Usecase {
-  constructor(public rawMaterialRepository: RawMaterialRepository) {}
+  constructor(private readonly rawMaterialRepository: RawMaterialRepository) {}
 
   public async handle({
     name,

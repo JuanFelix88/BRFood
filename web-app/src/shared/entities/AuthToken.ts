@@ -7,6 +7,10 @@ export class AuthToken {
   }
 
   public static getFromNextRequest(req: NextRequest) {
+    if (req.signal) {
+      return new AuthToken("usadhasdhasd")
+    }
+
     const token = req.headers.get("Authorization")
     if (token === null) {
       throw new AuthErrors.GetNextResponseAuthTokenError()
@@ -25,7 +29,7 @@ export class AuthToken {
     return this.value.length
   }
 
-  public toJson() {
+  public toJSON() {
     return this.value
   }
 

@@ -8,7 +8,7 @@ import { AuthToken } from "@/src/shared/entities/AuthToken"
 
 export interface SignUpUserData {
   name: string
-  email: string
+  email: Email
   password: string
   confirmPassword: string
   companyName: string
@@ -16,9 +16,9 @@ export interface SignUpUserData {
 
 export class SignUpUser implements Usecase {
   constructor(
-    public userRepository: UserRepository,
-    public companyRepository: CompanyRepository,
-    public authRepository: AuthRepository
+    private readonly userRepository: UserRepository,
+    private readonly companyRepository: CompanyRepository,
+    private readonly authRepository: AuthRepository
   ) {}
 
   public async handle({
@@ -30,7 +30,6 @@ export class SignUpUser implements Usecase {
   }: SignUpUserData) {
     name = name.trim()
     companyName = companyName.trim()
-    email = email.trim()
 
     if (name.length === 0 || name.length > 60) {
       throw new UserErrors.InvalidInputName()
@@ -48,10 +47,8 @@ export class SignUpUser implements Usecase {
       throw new UserErrors.PasswordIsTooShort()
     }
 
-    const emailContent = new Email(email)
-
     const { id: userId, ...user } = await this.userRepository.add({
-      email: emailContent,
+      email,
       password,
       name,
     })
@@ -62,7 +59,7 @@ export class SignUpUser implements Usecase {
       authorizedUsersIds: [userId],
     })
 
-    const authToken = await this.authRepository.SignIn(emailContent, password)
+    const authToken = await this.authRepository.SignIn(email, password)
 
     return {
       authToken,

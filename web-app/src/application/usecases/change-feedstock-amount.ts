@@ -4,19 +4,16 @@ import { AmountValue } from "@/src/shared/entities/AmountValue"
 
 export interface ChangeRawMaterialAmountData {
   rawMaterialId: number
-  amountInt: number
+  amount: AmountValue
 }
 
 export class ChangeRawMaterialAmount implements Usecase {
-  constructor(public rawMaterialRepository: RawMaterialRepository) {}
+  constructor(private readonly rawMaterialRepository: RawMaterialRepository) {}
 
   public async handle({
-    amountInt,
+    amount,
     rawMaterialId,
   }: ChangeRawMaterialAmountData): Promise<void> {
-    await this.rawMaterialRepository.addNewAmount(
-      rawMaterialId,
-      new AmountValue(amountInt)
-    )
+    await this.rawMaterialRepository.addNewAmount(rawMaterialId, amount)
   }
 }

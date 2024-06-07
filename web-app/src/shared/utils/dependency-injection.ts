@@ -47,7 +47,9 @@ export function injectsDependencyList<T = any, J = any>(
       )
     }
 
-    instance[key] = injectsDependencyList(dependenciesMatcheds, dependencyList)
+    Object.defineProperty(instance, key, {
+      value: injectsDependencyList(dependenciesMatcheds[0], dependencyList),
+    })
   }
 
   return instance

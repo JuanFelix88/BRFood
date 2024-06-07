@@ -18,9 +18,9 @@ interface AddProductData {
 
 export class AddProduct implements Usecase {
   constructor(
-    public productRepository: ProductRepository,
-    public coverImageRepository: CoverImageRepository,
-    public userRepository: UserRepository
+    private readonly productRepository: ProductRepository,
+    private readonly coverImageRepository: CoverImageRepository,
+    private readonly userRepository: UserRepository
   ) {}
 
   public async handle({
