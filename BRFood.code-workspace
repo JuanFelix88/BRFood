@@ -20,7 +20,7 @@
 		"symbols.files.associations": {
 			"*.code-workspace": "capacitor",
 			"middleware.ts": "http",
-			"route.ts": "http",
+			"route.ts": "zig",
 		},
 		"symbols.folders.associations": {
 			"infra": "folder-orange",
@@ -36,7 +36,10 @@
 			"editor.formatOnSave": true
 		},
 		"cSpell.words": [
-			"Dont"
+			"Dont",
+			"nocheck",
+			"postgres",
+			"signin"
 		],
 	},
 }

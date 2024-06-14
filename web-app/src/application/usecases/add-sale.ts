@@ -3,7 +3,7 @@ import { SaleRepository } from "../repositories/sale-repository"
 import { SaleErrors } from "../errors/sale"
 import { ProductRepository } from "../repositories/product-repository"
 import { AmountValue } from "@/src/shared/entities/AmountValue"
-import { PaymentMethodRepository } from "../repositories/paymentmethod-repository"
+import { PaymentMethodRepository } from "../repositories/payment-method-repository"
 import { CurrencyValue } from "@/src/shared/entities/CurrencyValue"
 
 interface AddSaleData {
@@ -41,7 +41,7 @@ export class AddSale implements Usecase {
     const databaseProducts = await this.productRepository.getByIds(products)
 
     const getProductPriceById = (productId: number) =>
-      databaseProducts.find((p) => p.id === productId)!.price
+      databaseProducts.find((p) => p.id === productId)!.lastPrice
 
     if (await this.paymentMethodRepository.existsIds(paymentMethods)) {
       throw new SaleErrors.TheListHastPaymentMethodNotFound()

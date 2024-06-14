@@ -1,11 +1,17 @@
 export class InternalImage {
   constructor(
     private readonly base64Data: string,
-    public readonly ext?: string
+    public readonly ext?: string,
   ) {}
 
-  public static fromBase64(base64: string, ext: string): InternalImage {
-    return new InternalImage(base64)
+  public static fromBase64(
+    base64: string | undefined,
+    ext: string | undefined,
+  ): InternalImage | undefined {
+    if (base64 && ext) {
+      return new InternalImage(base64)
+    }
+    return undefined
   }
 
   public get base64(): string {

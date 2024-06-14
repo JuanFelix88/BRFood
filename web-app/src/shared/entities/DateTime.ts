@@ -1,6 +1,7 @@
+import { StaticClass } from "../utils/static-class"
 import { Serializable } from "./Serializable"
 
-export class DateTime implements Serializable {
+export class DateTime extends StaticClass implements Serializable {
   protected formatter = new Intl.DateTimeFormat("pt-BR", {
     year: "numeric",
     month: "numeric",
@@ -11,7 +12,9 @@ export class DateTime implements Serializable {
     hour12: false,
   })
 
-  constructor(private value: number) {}
+  constructor(private value: number) {
+    super()
+  }
 
   public static fromDate(date: Date): DateTime {
     return new DateTime(date.valueOf())

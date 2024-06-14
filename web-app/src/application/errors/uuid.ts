@@ -19,4 +19,13 @@ export namespace UUIDErrors {
       })
     }
   }
+
+  export class IdIsMalformedUUIDError extends AppError {
+    constructor() {
+      super("Id Is Malformed UUID Error", {
+        [Lang.EN]: "ID is poorly formatted for Uuid's conversion",
+        [Lang.PT_BR]: "O id está mal formatado para conversão de UUID",
+      })
+    }
+  }
 }

@@ -1,27 +1,19 @@
-import { SignUpUser } from "@/src/application/usecases/signup-user"
-import { vercelFactory } from "@/src/infra/factories/vercel"
+import { BRFood } from "@/src/infra/main/main"
 import { Email } from "@/src/shared/entities/Email"
 import { MethodsExceptions } from "@/src/shared/utils/methods-exceptions"
+import { StatusCodes } from "http-status-codes"
 import { NextRequest, NextResponse } from "next/server"
 
-const singUpUser = vercelFactory.inject<SignUpUser>(SignUpUser)
-
-namespace POST {
-  export interface Body {
-    email: string
-    password: string
-    confirmPassword: string
-    name: string
-    companyName: string
-  }
-}
-
-export async function POST(req: NextRequest): Promise<NextResponse> {
+export async function POST(req: NextRequest) {
   try {
     const { email, password, companyName, confirmPassword, name }: POST.Body =
       await req.json()
 
-    const { authToken, company, user } = await singUpUser.handle({
+    const {
+      authToken: token,
+      company,
+      user,
+    } = await BRFood.signUpUser.handle({
       email: new Email(email),
       password,
       companyName,
@@ -29,17 +21,29 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       name,
     })
 
+    const headers = token.createResponseHeaders()
+
     return NextResponse.json(
       {
-        token: authToken,
         company,
         user,
       },
       {
-        status: 200,
-      }
+        status: StatusCodes.OK,
+        headers,
+      },
     )
   } catch (error) {
     return MethodsExceptions.handleError(req, error)
+  }
+}
+
+export namespace POST {
+  export interface Body {
+    email: string
+    password: string
+    confirmPassword: string
+    name: string
+    companyName?: string
   }
 }

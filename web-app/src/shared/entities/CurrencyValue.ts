@@ -2,15 +2,25 @@ import { Serializable } from "./Serializable"
 
 export class CurrencyValue implements Serializable {
   constructor(private readonly intValue: number) {
-    if (typeof intValue !== "number") {
+    if (typeof this.intValue === "string") {
+      this.intValue = parseInt(this.intValue)
+    }
+
+    if (isNaN(this.intValue)) {
       throw new TypeError(
-        "The value informed for currency conversion is incorrect"
+        "The value informed for currency conversion is incorrect",
       )
     }
 
-    if (intValue.toString().includes(".")) {
+    if (typeof this.intValue !== "number") {
       throw new TypeError(
-        "The value informed for currency conversion must be an integer"
+        "The value informed for currency conversion is incorrect",
+      )
+    }
+
+    if (this.intValue.toString().includes(".")) {
+      throw new TypeError(
+        "The value informed for currency conversion must be an integer",
       )
     }
   }
@@ -41,6 +51,22 @@ export class CurrencyValue implements Serializable {
    */
   public toString(): string {
     return `R$ ${this.intValue.toFixed(2).replace(".", ",")}`
+  }
+
+  public isEqual(otherValue: CurrencyValue | string | number): boolean {
+    if (otherValue instanceof CurrencyValue) {
+      return this.int === otherValue.int
+    }
+
+    if (typeof otherValue === "string") {
+      return this.int === parseInt(otherValue)
+    }
+
+    if (typeof otherValue === "number") {
+      return this.int === otherValue
+    }
+
+    return false
   }
 
   public get userView(): string {

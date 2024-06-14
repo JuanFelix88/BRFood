@@ -11,14 +11,14 @@ export interface SignUpUserData {
   email: Email
   password: string
   confirmPassword: string
-  companyName: string
+  companyName?: string
 }
 
 export class SignUpUser implements Usecase {
   constructor(
     private readonly userRepository: UserRepository,
     private readonly companyRepository: CompanyRepository,
-    private readonly authRepository: AuthRepository
+    private readonly authRepository: AuthRepository,
   ) {}
 
   public async handle({
@@ -29,13 +29,15 @@ export class SignUpUser implements Usecase {
     password,
   }: SignUpUserData) {
     name = name.trim()
-    companyName = companyName.trim()
+    if (companyName) {
+      companyName = companyName.trim()
+    }
 
     if (name.length === 0 || name.length > 60) {
       throw new UserErrors.InvalidInputName()
     }
 
-    if (companyName.length === 0 || companyName.length > 70) {
+    if (companyName?.length === 0 || (companyName?.length ?? 0) > 70) {
       throw new UserErrors.InvalidInputCompanyName()
     }
 
@@ -47,24 +49,27 @@ export class SignUpUser implements Usecase {
       throw new UserErrors.PasswordIsTooShort()
     }
 
-    const { id: userId, ...user } = await this.userRepository.add({
-      email,
-      password,
-      name,
-    })
+    const authToken = await this.authRepository.signUp(email, password)
+    const { userId } = authToken
 
-    const company = await this.companyRepository.add({
-      name: companyName,
-      ownerUserId: userId,
-      authorizedUsersIds: [userId],
-    })
+    await this.userRepository.overWriteBasic(authToken.userId, { name, email })
 
-    const authToken = await this.authRepository.SignIn(email, password)
+    const company = companyName
+      ? await this.companyRepository.add({
+          name: companyName,
+          ownerUserId: userId,
+          authorizedUsersIds: [userId],
+        })
+      : null
 
     return {
       authToken,
       company,
-      user,
+      user: {
+        id: userId,
+        name,
+        email,
+      },
     }
   }
 }

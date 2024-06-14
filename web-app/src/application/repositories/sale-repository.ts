@@ -1,6 +1,6 @@
 import { Register } from "@/src/shared/entities/Register"
-import { Sale } from "../entities/Sale"
-import { CurrencyValue } from '@/src/shared/entities/CurrencyValue'
+import { Sale } from "@/src/application/entities/Sale/Sale"
+import { CurrencyValue } from "@/src/shared/entities/CurrencyValue"
 
 namespace SaleRepository {
   export interface AddPayload {

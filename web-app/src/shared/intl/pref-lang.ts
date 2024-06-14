@@ -18,18 +18,18 @@ export class PrefLang {
 
   constructor(
     public readonly lang: Lang,
-    private readonly defaultSet: boolean
+    private readonly defaultSet: boolean,
   ) {}
 
   public isDefaultSet(): boolean {
     return this.defaultSet
   }
 
-  public messageFromError(error: AppError): string {
-    return error.props[this.lang]
+  public messageFromError(error: AppError): { errorMessage: string } {
+    return { errorMessage: error.props[this.lang] }
   }
 
-  public messageFromIntlMessage(msg: IntlMessage): string {
-    return msg.props[this.lang]
+  public messageFromIntlMessage(msg: IntlMessage): { message: string } {
+    return { message: msg.props[this.lang] }
   }
 }

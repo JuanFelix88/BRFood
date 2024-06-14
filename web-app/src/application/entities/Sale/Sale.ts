@@ -1,8 +1,8 @@
-import { DateTime } from '@/src/shared/entities/DateTime'
-import { Product } from './Product'
-import { CurrencyValue } from '@/src/shared/entities/CurrencyValue'
-import { PaymentMethod } from './Payment'
-import { AmountValue } from '@/src/shared/entities/AmountValue'
+import { DateTime } from "@/src/shared/entities/DateTime"
+import { Product } from "./Product/Product"
+import { CurrencyValue } from "@/src/shared/entities/CurrencyValue"
+import { PaymentMethod } from "./Payment/Payment"
+import { AmountValue } from "@/src/shared/entities/AmountValue"
 
 interface SaleProductItem {
   productId: number

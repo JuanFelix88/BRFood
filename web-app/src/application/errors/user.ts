@@ -2,6 +2,17 @@ import { AppError } from "@/src/shared/entities/AppError"
 import { Lang } from "@/src/shared/intl/lang"
 
 export namespace UserErrors {
+  export class UserNotFound extends AppError {
+    constructor() {
+      super("User not found", {
+        [Lang.EN]:
+          "User not found, please check your credentials and try again",
+        [Lang.PT_BR]:
+          "Usuário não encontrado, por favor, verifique suas credenciais e tente novamente",
+      })
+    }
+  }
+
   export class InvalidInputName extends AppError {
     constructor() {
       super("Invalid Input Name", {
@@ -37,6 +48,16 @@ export namespace UserErrors {
         [Lang.EN]: "Password is too short",
         [Lang.PT_BR]:
           "A senha é muito curta, considere pelo menos 8 caracteres",
+      })
+    }
+  }
+
+  export class IdUserIsMissingError extends AppError {
+    constructor() {
+      super("Id user is missing", {
+        [Lang.EN]: "The user ID is missing, check and try again",
+        [Lang.PT_BR]:
+          "O ID do usuário está faltando, verifique e tente novamente",
       })
     }
   }

@@ -16,6 +16,6 @@ export class SignInUser implements Usecase {
       throw new AuthErrors.PasswordCannotEmptyError()
     }
 
-    return await this.authRepository.SignIn(email, password)
+    return await this.authRepository.signIn(email, password)
   }
 }
