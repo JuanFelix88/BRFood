@@ -4,7 +4,9 @@ import { CompanyErrors } from "../errors/company"
 import { CompanyRepository } from "../repositories/company-repository"
 import { UUID } from "@/src/shared/entities/UUID"
 import { UserErrors } from "../errors/user"
+import { injectable } from "@/src/shared/utils/dependency-injection"
 
+@injectable()
 export class GetCompanyById implements Usecase {
   constructor(private readonly companyRepository: CompanyRepository) {}
 
@@ -23,7 +25,7 @@ export class GetCompanyById implements Usecase {
     )
 
     if (!isUserAuthorized) {
-      throw new CompanyErrors.CompanyIsNotAuthorizedError()
+      throw new CompanyErrors.IsNotAuthorizedError()
     }
 
     return await this.companyRepository.get(id)

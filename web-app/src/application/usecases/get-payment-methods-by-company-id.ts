@@ -5,7 +5,11 @@ import { PaymentMethodRepository } from "../repositories/payment-method-reposito
 import { CompanyRepository } from "../repositories/company-repository"
 import { CompanyErrors } from "../errors/company"
 import { UserErrors } from "../errors/user"
+import { Pagination } from "@/src/shared/entities/Pagination"
+import { ArrayCountAll } from "@/src/shared/entities/ArrayCountAll"
+import { injectable } from "@/src/shared/utils/dependency-injection"
 
+@injectable()
 export class GetPaymentMethodsByCompanyId implements Usecase {
   constructor(
     private readonly paymentMethodRepository: PaymentMethodRepository,
@@ -14,7 +18,10 @@ export class GetPaymentMethodsByCompanyId implements Usecase {
   public async handle(
     companyId: number,
     userId: UUID,
-  ): Promise<PaymentMethod[]> {
+    pagination: Pagination,
+  ): Promise<ArrayCountAll<PaymentMethod>> {
+    pagination.throws.ifLimitIsGreaterThan(50)
+
     if (userId instanceof UUID === false) {
       throw new UserErrors.IdUserIsMissingError()
     }
@@ -25,9 +32,13 @@ export class GetPaymentMethodsByCompanyId implements Usecase {
     )
 
     if (!isUserAuthorized) {
-      throw new CompanyErrors.CompanyIsNotAuthorizedError()
+      throw new CompanyErrors.IsNotAuthorizedError()
     }
 
-    return await this.paymentMethodRepository.getByCompanyId(companyId)
+    return await this.paymentMethodRepository.getByCompanyId(
+      companyId,
+      pagination.offset,
+      pagination.limit,
+    )
   }
 }

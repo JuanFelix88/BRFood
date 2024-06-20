@@ -7,6 +7,7 @@ import { PaymentMethod } from "../entities/PaymentMethod/PaymentMethod"
 import { UserErrors } from "../errors/user"
 import { CompanyErrors } from "../errors/company"
 import { PaymentMethodErrors } from "../errors/payment-method"
+import { injectable } from "@/src/shared/utils/dependency-injection"
 
 interface AddPaymentMethodPayload {
   name: string
@@ -15,6 +16,7 @@ interface AddPaymentMethodPayload {
   fee: CurrencyValue
 }
 
+@injectable()
 export class AddPaymentMethod implements Usecase {
   constructor(
     private readonly paymentMethodRepository: PaymentMethodRepository,
@@ -42,7 +44,7 @@ export class AddPaymentMethod implements Usecase {
     if (
       !(await this.companyRepository.isUserAuthorized(ownerCompanyId, authorId))
     ) {
-      throw new CompanyErrors.CompanyIsNotAuthorizedError()
+      throw new CompanyErrors.IsNotAuthorizedError()
     }
 
     return await this.paymentMethodRepository.add({

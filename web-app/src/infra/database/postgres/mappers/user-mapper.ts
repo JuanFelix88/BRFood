@@ -19,8 +19,7 @@ export class UserMapper extends StaticClass {
         name: String(raw.name),
         email: new Email(raw.email),
         createdAt: DateTime.fromDate(raw.created_at),
-        status:
-          raw.deleted_at === null ? User.Status.Active : User.Status.Inactive,
+        status: raw.deleted_at === null ? User.Status.Active : User.Status.Inactive,
       }
     } catch (error: any) {
       throw new MapperErrors.MappingError(UserMapper, error.message)

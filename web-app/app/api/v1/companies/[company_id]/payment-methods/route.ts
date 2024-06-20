@@ -1,6 +1,7 @@
 import { BRFood } from "@/src/infra/main/main"
 import { AuthToken } from "@/src/shared/entities/AuthToken"
 import { CurrencyValue } from "@/src/shared/entities/CurrencyValue"
+import { Pagination } from "@/src/shared/entities/Pagination"
 import { MethodsExceptions } from "@/src/shared/utils/methods-exceptions"
 import { StatusCodes } from "http-status-codes"
 import { NextRequest, NextResponse } from "next/server"
@@ -12,13 +13,18 @@ export async function GET(
   try {
     const companyId = Number(cxt.params.company_id)
     const { userId } = AuthToken.getFromNextRequest(req)
+    const pagination = Pagination.fromNextRequest(req)
 
-    const paymentMethod = await BRFood.getPaymentMethodsByCompanyId.handle(
+    const paymentMethods = await BRFood.getPaymentMethodsByCompanyId.handle(
       companyId,
       userId,
+      pagination,
     )
 
-    return NextResponse.json(paymentMethod, { status: StatusCodes.OK })
+    return NextResponse.json(paymentMethods, {
+      status: StatusCodes.OK,
+      headers: pagination.getHeaderWithXTotalCount(paymentMethods),
+    })
   } catch (error) {
     return MethodsExceptions.handleError(req, error)
   }

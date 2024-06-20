@@ -7,8 +7,16 @@ export class AmountValue implements Serializable {
       throw new AmountValueErrors.FloatError(value)
     }
 
+    if (typeof this.value !== "number") {
+      this.value = Number(this.value)
+    }
+
+    if (isNaN(this.value)) {
+      throw new AmountValueErrors.QuantityErrorError(value)
+    }
+
     if (this.value < 0) {
-      throw new AmountValueErrors.QuantityError(value)
+      throw new AmountValueErrors.InvalidEntryValueError(value)
     }
   }
 

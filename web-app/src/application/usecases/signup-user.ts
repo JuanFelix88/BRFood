@@ -5,6 +5,7 @@ import { CompanyRepository } from "../repositories/company-repository"
 import { Email } from "@/src/shared/entities/Email"
 import { AuthRepository } from "../repositories/auth-repository"
 import { AuthToken } from "@/src/shared/entities/AuthToken"
+import { injectable } from "@/src/shared/utils/dependency-injection"
 
 export interface SignUpUserData {
   name: string
@@ -14,7 +15,8 @@ export interface SignUpUserData {
   companyName?: string
 }
 
-export class SignUpUser implements Usecase {
+@injectable()
+export class SignupUser implements Usecase {
   constructor(
     private readonly userRepository: UserRepository,
     private readonly companyRepository: CompanyRepository,

@@ -3,7 +3,9 @@ import { AuthToken } from "@/src/shared/entities/AuthToken"
 import { Email } from "@/src/shared/entities/Email"
 import { SupabaseService } from "../../services/supabase"
 import { AuthErrors } from "@/src/application/errors/auth"
+import { injectable } from "@/src/shared/utils"
 
+@injectable("Supabase")
 export class SupabaseAuthRepository implements AuthRepository {
   private readonly supabase = new SupabaseService()
 

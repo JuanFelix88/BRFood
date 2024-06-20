@@ -7,6 +7,7 @@ export interface Product {
   name: string
   lastPrice: CurrencyValue
   lastProfit: CurrencyValue
+  lastPriceId: number
   coverImage?: BucketImage
   ownerCompanyId: number
   updatedAt: DateTime

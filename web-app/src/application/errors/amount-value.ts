@@ -2,7 +2,7 @@ import { AppError } from "@/src/shared/entities/AppError"
 import { Lang } from "@/src/shared/intl/lang"
 
 export namespace AmountValueErrors {
-  export class QuantityError extends AppError {
+  export class QuantityErrorError extends AppError {
     constructor(n: number) {
       super("Amount error", {
         [Lang.EN]: `Amount is invalid: ${n}`,
@@ -16,6 +16,15 @@ export namespace AmountValueErrors {
       super("Amount error float value", {
         [Lang.EN]: `Amount error float value: ${n}`,
         [Lang.PT_BR]: `A quantidade informada é inválida pois é um valor decimal: ${n}`,
+      })
+    }
+  }
+
+  export class InvalidEntryValueError extends AppError {
+    constructor(n: number) {
+      super("Amount error", {
+        [Lang.EN]: `The input value for quantity is invalid: ${n}`,
+        [Lang.PT_BR]: `O valor de entrada para quantidade é inválido: ${n}`,
       })
     }
   }

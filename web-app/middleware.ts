@@ -11,7 +11,6 @@ export function isAuthenticatedRoute(request: NextRequest) {
 }
 
 export function middleware(request: NextRequest, event: NextFetchEvent) {
-  console.time("request")
   if (isAuthenticatedRoute(request)) {
     if (!AuthToken.hasTokenNextRequest(request)) {
       return NextResponse.json(

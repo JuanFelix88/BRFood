@@ -9,23 +9,17 @@ import { IntlMessage } from "@/src/shared/entities/IntlMessage"
 import { Lang } from "@/src/shared/intl/lang"
 import { PrefLang } from "@/src/shared/intl/pref-lang"
 
-export async function PUT(
-  req: NextRequest,
-  cxt: { params: { payment_method_id: string } },
-) {
+export async function PUT(req: NextRequest, cxt: { params: { payment_method_id: string } }) {
   try {
     const { name, fee }: PUT.Body = await req.json()
     const paymentMethodId = Number(cxt.params.payment_method_id)
     const { userId } = AuthToken.getFromNextRequest(req)
 
-    const paymentMethod = await BRFood.updatePaymentMethod.handle(
-      paymentMethodId,
-      {
-        name,
-        fee: new CurrencyValue(fee),
-        authorId: userId,
-      },
-    )
+    const paymentMethod = await BRFood.updatePaymentMethod.handle(paymentMethodId, {
+      name,
+      fee: new CurrencyValue(fee),
+      authorId: userId,
+    })
 
     return NextResponse.json(paymentMethod, { status: StatusCodes.OK })
   } catch (error) {
@@ -33,16 +27,13 @@ export async function PUT(
   }
 }
 
-export async function DELETE(
-  req: NextRequest,
-  cxt: { params: { payment_method_id: string } },
-) {
+export async function DELETE(req: NextRequest, cxt: { params: { payment_method_id: string } }) {
   try {
     const paymentMethodId = Number(cxt.params.payment_method_id)
     const { userId } = AuthToken.getFromNextRequest(req)
 
     const prefLang = PrefLang.getFromRequest(req)
-    await BRFood.deletePaymentMethodBy.handle(paymentMethodId, userId)
+    await BRFood.deletePaymentMethodById.handle(paymentMethodId, userId)
 
     const message = new IntlMessage({
       [Lang.EN]: "The payment method was successfully deleted",

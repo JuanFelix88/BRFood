@@ -10,6 +10,7 @@ import { UserRepository } from "../repositories/user-repository"
 import { Product } from "../entities/Product/Product"
 import { CompanyRepository } from "../repositories/company-repository"
 import { CompanyErrors } from "../errors/company"
+import { injectable } from "@/src/shared/utils/dependency-injection"
 
 interface AddProductPayload {
   name: string
@@ -20,6 +21,7 @@ interface AddProductPayload {
   authorId: UUID
 }
 
+@injectable()
 export class AddProduct implements Usecase {
   constructor(
     private readonly productRepository: ProductRepository,
@@ -64,7 +66,7 @@ export class AddProduct implements Usecase {
       )
 
     if (!authorIsFoundedInAuthorizedList) {
-      throw new CompanyErrors.CompanyIsNotAuthorizedError()
+      throw new CompanyErrors.IsNotAuthorizedError()
     }
 
     const coverBucketImg =

@@ -6,6 +6,7 @@ import { PaymentMethodErrors } from "../errors/payment-method"
 import { CompanyErrors } from "../errors/company"
 import { UUID } from "@/src/shared/entities/UUID"
 import { CompanyRepository } from "../repositories/company-repository"
+import { injectable } from "@/src/shared/utils/dependency-injection"
 
 interface UpdatePaymentMethodPayload {
   name: string
@@ -13,6 +14,7 @@ interface UpdatePaymentMethodPayload {
   authorId: UUID
 }
 
+@injectable()
 export class UpdatePaymentMethod implements Usecase {
   constructor(
     private readonly paymentMethodRepository: PaymentMethodRepository,
@@ -43,7 +45,7 @@ export class UpdatePaymentMethod implements Usecase {
     )
 
     if (!isAuthorizedCompany) {
-      throw new CompanyErrors.CompanyIsNotAuthorizedError()
+      throw new CompanyErrors.IsNotAuthorizedError()
     }
 
     return await this.paymentMethodRepository.update(paymentMethodId, {

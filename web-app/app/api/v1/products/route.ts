@@ -10,13 +10,9 @@ export async function GET(req: NextRequest) {
   try {
     const authToken = AuthToken.getFromNextRequest(req)
 
-    console.time("usecase")
     const listProducts = await BRFood.getProductsByUserId.handle(
       authToken.userId,
     )
-    console.timeEnd("usecase")
-
-    console.timeEnd("request")
     return NextResponse.json(listProducts, {
       status: 200,
     })

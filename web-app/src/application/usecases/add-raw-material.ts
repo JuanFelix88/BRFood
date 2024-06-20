@@ -3,6 +3,7 @@ import { RawMaterialRepository } from "../repositories/raw-material-repository"
 import { RawMaterialErrors } from "../errors/raw-material"
 import { CurrencyValue } from "@/src/shared/entities/CurrencyValue"
 import { AmountValue } from "@/src/shared/entities/AmountValue"
+import { injectable } from "@/src/shared/utils/dependency-injection"
 
 interface AddRawMaterialData {
   name: string
@@ -11,6 +12,7 @@ interface AddRawMaterialData {
   unitPriceInt: number
 }
 
+@injectable()
 export class AddRawMaterial implements Usecase {
   constructor(private readonly rawMaterialRepository: RawMaterialRepository) {}
 

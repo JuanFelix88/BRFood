@@ -3,7 +3,10 @@ import { ProductErrors } from "@/src/application/errors/product"
 import { ProductRepository } from "@/src/application/repositories/product-repository"
 import { PostgresService } from "@/src/infra/services/postgres"
 import { ProductMapper } from "../mappers/product-mapper"
+import { ArrayCountAll } from "@/src/shared/entities/ArrayCountAll"
+import { injectable } from "@/src/shared/utils/dependency-injection"
 
+@injectable("Postgres")
 export class PostgresProductRepository implements ProductRepository {
   public async get(id: number): Promise<Product> {
     const { rows: rowsProduct } = await PostgresService.query<{
@@ -11,6 +14,7 @@ export class PostgresProductRepository implements ProductRepository {
       name: string
       price: string
       profit: string
+      price_id: number
       owner_company_id: number
       created_at: Date
       updated_at: Date
@@ -30,6 +34,7 @@ export class PostgresProductRepository implements ProductRepository {
         products.name,
         prices.price,
         prices.profit,
+        prices.id as price_id,
         products.owner_company_id,
         products.created_at,
         products.updated_at
@@ -50,6 +55,7 @@ export class PostgresProductRepository implements ProductRepository {
       name: rowsProduct[0].name,
       price: rowsProduct[0].price,
       profit: rowsProduct[0].profit,
+      price_id: rowsProduct[0].price_id,
       owner_company_id: rowsProduct[0].owner_company_id,
       updated_at: rowsProduct[0].updated_at,
       created_at: rowsProduct[0].created_at,
@@ -88,6 +94,7 @@ export class PostgresProductRepository implements ProductRepository {
       }
 
       const { rows: rowsCreateProductPrice } = await client.query<{
+        id: number
         product_id: number
         price: string
         profit: string
@@ -95,7 +102,7 @@ export class PostgresProductRepository implements ProductRepository {
         `--sql
           INSERT INTO public.product_prices(product_id, price, profit)
           VALUES ($1, $2, $3)
-          RETURNING product_id, price, profit
+          RETURNING id, product_id, price, profit
         `,
         [productId, payload.price.int, payload.profit.int],
       )
@@ -110,8 +117,9 @@ export class PostgresProductRepository implements ProductRepository {
         id: rowsCreateProduct[0].id,
         name: rowsCreateProduct[0].name,
         price: rowsCreateProductPrice[0].price,
-        owner_company_id: rowsCreateProduct[0].owner_company_id,
         profit: rowsCreateProductPrice[0].profit,
+        price_id: rowsCreateProductPrice[0].id,
+        owner_company_id: rowsCreateProduct[0].owner_company_id,
         updated_at: rowsCreateProduct[0].updated_at,
         created_at: rowsCreateProduct[0].created_at,
       })
@@ -140,7 +148,7 @@ export class PostgresProductRepository implements ProductRepository {
         ? `--sql
           INSERT INTO public.product_prices(product_id, price, profit)
           VALUES ($1, $2, $3)
-          RETURNING product_id, price, profit`
+          RETURNING id, price, profit`
         : `--sql
           SELECT id, price, profit
           FROM public.product_prices
@@ -194,6 +202,7 @@ export class PostgresProductRepository implements ProductRepository {
         id: rowProductUpdated[0].id,
         name: rowProductUpdated[0].name,
         price: rowsProductPrices[0].price,
+        price_id: rowsProductPrices[0].id,
         owner_company_id: rowProductUpdated[0].owner_company_id,
         profit: rowsProductPrices[0].profit,
         updated_at: rowProductUpdated[0].updated_at,
@@ -217,6 +226,7 @@ export class PostgresProductRepository implements ProductRepository {
       name: string
       price: string
       profit: string
+      price_id: number
       owner_company_id: number
       updated_at: Date
       created_at: Date
@@ -235,9 +245,10 @@ export class PostgresProductRepository implements ProductRepository {
         products.name,
         prices.price,
         prices.profit,
-        prices.owner_company_id,
-        prices.updated_at,
-        prices.created_at
+        prices.id as price_id,
+        products.owner_company_id,
+        products.updated_at,
+        products.created_at
       FROM public.products products
         INNER JOIN product_prices_with_row_number prices 
           ON prices.product_id = products.id AND prices.rn = 1
@@ -247,15 +258,21 @@ export class PostgresProductRepository implements ProductRepository {
     return rowsListProducts.map(ProductMapper.toDomain)
   }
 
-  public async getByCompanyId(companyId: number): Promise<Product[]> {
+  public async getByCompanyId(
+    companyId: number,
+    offset: number,
+    limit: number,
+  ): Promise<ArrayCountAll<Product>> {
     const { rows: rowsListProducts } = await PostgresService.query<{
       id: number
       name: string
       price: string
       profit: string
+      price_id: number
       owner_company_id: number
       updated_at: Date
       created_at: Date
+      full_count: number
     }>(
       `--sql
       WITH product_prices_with_row_number AS (
@@ -271,29 +288,39 @@ export class PostgresProductRepository implements ProductRepository {
         products.name,
         prices.price,
         prices.profit,
+        prices.id as price_id,
         products.owner_company_id,
         products.updated_at,
-        products.created_at
+        products.created_at,
+        count(*) OVER() AS full_count
       FROM public.products products
         INNER JOIN product_prices_with_row_number prices 
           ON prices.product_id = products.id AND prices.rn = 1
       WHERE products.owner_company_id = $1
+      ORDER BY products.created_at DESC
+      OFFSET $2
+      LIMIT $3
     `,
-      [companyId],
+      [companyId, offset, limit],
     )
 
-    return rowsListProducts.map(ProductMapper.toDomain)
+    const count = rowsListProducts[0]?.full_count ?? 0
+
+    return ArrayCountAll.fromArray(
+      rowsListProducts.map(ProductMapper.toDomain),
+      count,
+    )
   }
 
   public async listByUserIdRelativeToOwnerCompany(
     userId: string,
   ): Promise<Product[]> {
-    console.time("sql")
     const { rows: rowsListProducts } = await PostgresService.query<{
       id: number
       name: string
       price: string
       profit: string
+      price_id: number
       owner_company_id: number
       updated_at: Date
       created_at: Date
@@ -312,6 +339,7 @@ export class PostgresProductRepository implements ProductRepository {
         products.name,
         prices.price,
         prices.profit,
+        prices.id as price_id,
         products.owner_company_id,
         products.updated_at,
         products.created_at
@@ -325,8 +353,6 @@ export class PostgresProductRepository implements ProductRepository {
       `,
       [userId],
     )
-    console.timeEnd("sql")
-
     return rowsListProducts.map(ProductMapper.toDomain)
   }
 

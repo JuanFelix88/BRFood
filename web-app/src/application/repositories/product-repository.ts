@@ -2,6 +2,7 @@ import { CurrencyValue } from "@/src/shared/entities/CurrencyValue"
 import { Product } from "../entities/Product/Product"
 import { BucketImage } from "@/src/shared/entities/BucketImage"
 import { UUID } from "@/src/shared/entities/UUID"
+import { ArrayCountAll } from "@/src/shared/entities/ArrayCountAll"
 
 export namespace ProductRepository {
   export interface AddPayload {
@@ -31,7 +32,11 @@ export abstract class ProductRepository {
     payload: ProductRepository.UpdatePayload,
   ): Promise<Product>
 
-  public abstract getByCompanyId(companyId: number): Promise<Product[]>
+  public abstract getByCompanyId(
+    companyId: number,
+    offset: number,
+    limit: number,
+  ): Promise<ArrayCountAll<Product>>
 
   public abstract listByUserIdRelativeToOwnerCompany(
     userId: string,

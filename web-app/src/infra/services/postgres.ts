@@ -88,6 +88,14 @@ function getTypeParser(type: PostgresTypes) {
       return Number(data.toString())
     }
 
+    if (type === PostgresTypes.INT4) {
+      return Number(data.toString())
+    }
+
+    if (type === PostgresTypes.INT2) {
+      return Number(data.toString())
+    }
+
     return data
   }
 }
@@ -99,7 +107,7 @@ const pool = new Pool({
   password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_DATABASE,
   keepAlive: true,
-  idleTimeoutMillis: 5_000,
+  idleTimeoutMillis: 15_000,
   max: 5,
   min: 1,
   types: { getTypeParser },
@@ -131,7 +139,7 @@ export class PostgresService extends StaticClass {
 
   public async query<T extends QueryResultRow = any>(
     query: string,
-    values?: (string | number | boolean)[],
+    values?: (string | number | boolean | undefined | null)[],
   ) {
     return await this.client!.query<T>(query, values)
   }

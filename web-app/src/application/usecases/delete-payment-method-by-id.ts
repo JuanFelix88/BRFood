@@ -4,7 +4,9 @@ import { PaymentMethodErrors } from "../errors/payment-method"
 import { UUID } from "@/src/shared/entities/UUID"
 import { CompanyRepository } from "../repositories/company-repository"
 import { CompanyErrors } from "../errors/company"
+import { injectable } from "@/src/shared/utils/dependency-injection"
 
+@injectable()
 export class DeletePaymentMethodById implements Usecase {
   constructor(
     private readonly paymentMethodRepository: PaymentMethodRepository,
@@ -24,7 +26,7 @@ export class DeletePaymentMethodById implements Usecase {
     )
 
     if (!isAuthorizedInCompany) {
-      throw new CompanyErrors.CompanyIsNotAuthorizedError()
+      throw new CompanyErrors.IsNotAuthorizedError()
     }
 
     await this.paymentMethodRepository.delete(paymentMethodId)

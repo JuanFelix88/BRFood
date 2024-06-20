@@ -2,6 +2,7 @@ import { BRFood } from "@/src/infra/main/main"
 import { AuthToken } from "@/src/shared/entities/AuthToken"
 import { CurrencyValue } from "@/src/shared/entities/CurrencyValue"
 import { InternalImage } from "@/src/shared/entities/Image"
+import { Pagination } from "@/src/shared/entities/Pagination"
 import { MethodsExceptions } from "@/src/shared/utils/methods-exceptions"
 import { StatusCodes } from "http-status-codes"
 import { NextRequest, NextResponse } from "next/server"
@@ -12,14 +13,18 @@ export async function GET(
 ) {
   try {
     const companyId = Number(cxt.params.company_id)
+    const pagination = Pagination.fromNextRequest(req)
     const { userId } = AuthToken.getFromNextRequest(req)
 
     const products = await BRFood.getProductsByCompanyId.handle(
       companyId,
       userId,
+      pagination,
     )
 
-    return NextResponse.json(products)
+    return NextResponse.json(products, {
+      headers: pagination.getHeaderWithXTotalCount(products),
+    })
   } catch (error) {
     return MethodsExceptions.handleError(req, error)
   }

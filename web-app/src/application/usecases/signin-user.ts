@@ -3,8 +3,10 @@ import { AuthToken } from "@/src/shared/entities/AuthToken"
 import { AuthRepository } from "../repositories/auth-repository"
 import { Email } from "@/src/shared/entities/Email"
 import { AuthErrors } from "../errors/auth"
+import { injectable } from "@/src/shared/utils/dependency-injection"
 
-export class SignInUser implements Usecase {
+@injectable()
+export class SigninUser implements Usecase {
   constructor(private readonly authRepository: AuthRepository) {}
 
   public async handle(email: Email, password: string): Promise<AuthToken> {

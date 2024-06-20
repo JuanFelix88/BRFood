@@ -8,6 +8,7 @@ import { AuthErrors } from "../errors/auth"
 import { CompanyErrors } from "../errors/company"
 import { ProductErrors } from "../errors/product"
 import { CompanyRepository } from "../repositories/company-repository"
+import { injectable } from "@/src/shared/utils/dependency-injection"
 
 interface UpdateProductPayload {
   name: string
@@ -17,6 +18,7 @@ interface UpdateProductPayload {
   authorId: UUID
 }
 
+@injectable()
 export class UpdateProduct implements Usecase {
   constructor(
     private readonly productRepository: ProductRepository,
@@ -56,7 +58,7 @@ export class UpdateProduct implements Usecase {
     )
 
     if (!isAuthorizedInCompany) {
-      throw new CompanyErrors.CompanyIsNotAuthorizedError()
+      throw new CompanyErrors.IsNotAuthorizedError()
     }
 
     return await this.productRepository.update(productId, {

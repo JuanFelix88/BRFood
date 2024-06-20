@@ -6,7 +6,9 @@ import { UUID } from "@/src/shared/entities/UUID"
 import { CompanyErrors } from "../errors/company"
 import { ProductErrors } from "../errors/product"
 import { AuthErrors } from "../errors/auth"
+import { injectable } from "@/src/shared/utils/dependency-injection"
 
+@injectable()
 export class DeleteProductById implements Usecase {
   constructor(
     private readonly productRepository: ProductRepository,
@@ -31,7 +33,7 @@ export class DeleteProductById implements Usecase {
     )
 
     if (!isAuthorizedInCompany) {
-      throw new CompanyErrors.CompanyIsNotAuthorizedError()
+      throw new CompanyErrors.IsNotAuthorizedError()
     }
 
     await this.productRepository.delete(productId)

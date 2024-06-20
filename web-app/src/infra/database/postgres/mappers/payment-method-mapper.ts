@@ -9,6 +9,7 @@ export class PaymentMethodMapper extends StaticClass {
     id: number
     name: string
     fee: number
+    fee_id: number
     updated_at: Date
     created_at: Date
     owner_company_id: number
@@ -17,7 +18,8 @@ export class PaymentMethodMapper extends StaticClass {
       return {
         id: Number(raw.id),
         name: String(raw.name),
-        fee: new CurrencyValue(Number(raw.fee)),
+        lastFee: new CurrencyValue(Number(raw.fee)),
+        lastFeeId: Number(raw.fee_id),
         updatedAt: DateTime.fromDate(raw.updated_at),
         createdAt: DateTime.fromDate(raw.created_at),
         ownerCompanyId: Number(raw.owner_company_id),

@@ -49,11 +49,40 @@ export namespace CompanyErrors {
     }
   }
 
-  export class CompanyIsNotAuthorizedError extends AppError {
+  export class IsNotAuthorizedError extends AppError {
     constructor() {
       super("Company is not authorized", {
         [Lang.EN]: `You do not have permission for this company`,
         [Lang.PT_BR]: `Você não possui autorização para esta empresa`,
+      })
+    }
+  }
+
+  export class InvalidInputCompanyName extends AppError {
+    constructor() {
+      super("Invalid Input Company Name", {
+        [Lang.EN]: "Invalid company name",
+        [Lang.PT_BR]: "Nome da empresa inválido",
+      })
+    }
+  }
+
+  export class CompanyNotUpdatedInDatabaseError extends AppError {
+    constructor() {
+      super("Company not updated in database", {
+        [Lang.EN]: "Company not updated in database",
+        [Lang.PT_BR]: "A empresa não foi atualizada no banco de dados",
+      })
+    }
+  }
+
+  export class EmailOwnerTargetMissingError extends AppError {
+    constructor() {
+      super("Email owner target missing", {
+        [Lang.EN]:
+          "The email of the new responsible for the company was not informed",
+        [Lang.PT_BR]:
+          "O email do novo responsável pela empresa não foi informado",
       })
     }
   }

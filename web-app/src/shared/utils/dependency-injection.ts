@@ -5,10 +5,40 @@ class InjectInspect {
   }
 }
 
+interface Injectable {
+  groupName?: string
+  target: { name: string }
+  name: string
+}
+
+export const globalInjectableList: Injectable[] = []
+
+/**
+ * @decorator
+ */
+export function injectable<T extends { new (...args: any[]): {} }>(
+  groupName?: string,
+) {
+  return function (target: T) {
+    if (globalInjectableList.some((d) => d.name === target.name)) {
+      return target
+    }
+
+    globalInjectableList.push({
+      target,
+      groupName,
+      name: target.name,
+    })
+    return target
+  }
+}
+
 export function injectsDependencyList<T = any, J = any>(
   target: J,
   dependencyList: Array<{ name: string }>,
-  throwsIfNotFound = false
+  throwsIfNotFound = false,
+  cachedMap: Map<string, any> = new Map(),
+  getSetter = false,
 ): T {
   const isClass = (target as any).toString().startsWith("class ")
 
@@ -18,7 +48,7 @@ export function injectsDependencyList<T = any, J = any>(
   }
 
   const constructorArguments = /constructor\((.*)\)\s{0,}{/.exec(
-    (target as any).toString()
+    (target as any).toString(),
   )?.[1]
 
   const injectableList = constructorArguments
@@ -29,22 +59,30 @@ export function injectsDependencyList<T = any, J = any>(
 
   for (const key of Object.keys(instance)) {
     const foundedInjectable = injectableList.some(
-      (injectable) => instance[key] === injectable
+      (injectable) => instance[key] === injectable,
     )
 
     if (!foundedInjectable) {
       continue
     }
 
+    if (cachedMap.has(key)) {
+      Object.defineProperty(instance, key, {
+        value: cachedMap.get(key),
+      })
+
+      continue
+    }
+
     const dependenciesMatcheds = dependencyList.filter((dependency) =>
-      dependency.name.toLowerCase().includes(key.toLowerCase())
+      dependency.name.toLowerCase().includes(key.toLowerCase()),
     )
 
     if (throwsIfNotFound && dependenciesMatcheds.length === 0) {
       throw new Error(
         `❌ Do not resolve the [[${
           (target as any).name
-        }.${key}]] injectable dependency`
+        }.${key}]] injectable dependency`,
       )
     }
 
@@ -52,7 +90,7 @@ export function injectsDependencyList<T = any, J = any>(
       console.log(
         `❌ Do not resolve the [[${
           (target as any).name
-        }.${key}]] injectable dependency`
+        }.${key}]] injectable dependency`,
       )
       continue
     }
@@ -63,13 +101,32 @@ export function injectsDependencyList<T = any, J = any>(
           (target as any).name
         }${key}, please check your code (${dependenciesMatcheds
           .map((d) => d.name)
-          .join(", ")})`
+          .join(", ")})`,
       )
     }
 
-    Object.defineProperty(instance, key, {
-      value: injectsDependencyList(dependenciesMatcheds[0], dependencyList),
-    })
+    if (getSetter) {
+      Object.defineProperty(instance, key, {
+        get: () =>
+          injectsDependencyList(
+            dependenciesMatcheds[0],
+            dependencyList,
+            throwsIfNotFound,
+            cachedMap,
+          ),
+      })
+    } else {
+      Object.defineProperty(instance, key, {
+        value: injectsDependencyList(
+          dependenciesMatcheds[0],
+          dependencyList,
+          throwsIfNotFound,
+          cachedMap,
+        ),
+      })
+    }
+
+    cachedMap.set(key, instance[key])
   }
 
   return instance

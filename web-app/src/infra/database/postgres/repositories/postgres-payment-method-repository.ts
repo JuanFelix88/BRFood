@@ -3,7 +3,11 @@ import { PaymentMethodErrors } from "@/src/application/errors/payment-method"
 import { PaymentMethodRepository } from "@/src/application/repositories/payment-method-repository"
 import { PostgresService } from "@/src/infra/services/postgres"
 import { PaymentMethodMapper } from "../mappers/payment-method-mapper"
+import f from "pg-format"
+import { ArrayCountAll } from "@/src/shared/entities/ArrayCountAll"
+import { injectable } from "@/src/shared/utils/dependency-injection"
 
+@injectable("Postgres")
 export class PostgresPaymentMethodRepository
   implements PaymentMethodRepository
 {
@@ -41,6 +45,7 @@ export class PostgresPaymentMethodRepository
       }
 
       const { rows: rowsAddPaymentMethodFee } = await client.query<{
+        id: number
         payment_method_id: number
         fee: number
       }>(
@@ -64,6 +69,7 @@ export class PostgresPaymentMethodRepository
         id: rowsAddPaymentMethod[0].id,
         name: rowsAddPaymentMethod[0].name,
         fee: rowsAddPaymentMethodFee[0].fee,
+        fee_id: rowsAddPaymentMethodFee[0].id,
         created_at: rowsAddPaymentMethod[0].created_at,
         updated_at: rowsAddPaymentMethod[0].updated_at,
         owner_company_id: rowsAddPaymentMethod[0].owner_company_id,
@@ -79,6 +85,7 @@ export class PostgresPaymentMethodRepository
       id: number
       name: string
       fee: number
+      fee_id: number
       owner_company_id: number
       created_at: Date
       updated_at: Date
@@ -86,6 +93,7 @@ export class PostgresPaymentMethodRepository
       `--sql
       WITH payment_method_fees_with_row_number AS (
         SELECT
+          fees.id,
           fees.payment_method_id,
           fees.fee,
           ROW_NUMBER() OVER(PARTITION BY fees.payment_method_id ORDER BY fees.id DESC) as rn
@@ -97,6 +105,7 @@ export class PostgresPaymentMethodRepository
         payment_methods.id,
         payment_methods.name,
         fees.fee,
+        fees.id as fee_id,
         payment_methods.owner_company_id,
         payment_methods.created_at,
         payment_methods.updated_at
@@ -116,6 +125,7 @@ export class PostgresPaymentMethodRepository
       id: rows[0].id,
       name: rows[0].name,
       fee: rows[0].fee,
+      fee_id: rows[0].fee_id,
       owner_company_id: rows[0].owner_company_id,
       created_at: rows[0].created_at,
       updated_at: rows[0].updated_at,
@@ -218,6 +228,7 @@ export class PostgresPaymentMethodRepository
         id: rowsUpdatePaymentMethod[0].id,
         name: rowsUpdatePaymentMethod[0].name,
         fee: rowsPaymentMethodFees[0].fee,
+        fee_id: rowsPaymentMethodFees[0].id,
         created_at: rowsUpdatePaymentMethod[0].created_at,
         updated_at: rowsUpdatePaymentMethod[0].updated_at,
         owner_company_id: rowsUpdatePaymentMethod[0].owner_company_id,
@@ -244,18 +255,71 @@ export class PostgresPaymentMethodRepository
     return rowCount === ids.length
   }
 
-  public async getByCompanyId(companyId: number): Promise<PaymentMethod[]> {
+  public async getByIds(
+    id: { paymentMethodId: number }[],
+    companyId: number,
+  ): Promise<PaymentMethod[]> {
     const { rows } = await PostgresService.query<{
       id: number
       name: string
       fee: number
+      fee_id: number
+      owner_company_id: number
+      updated_at: Date
+      created_at: Date
+    }>(
+      f(
+        `--sql
+        WITH payment_method_fees_with_row_number AS (
+          SELECT
+            fees.id,
+            fees.payment_method_id,
+            fees.fee,
+            ROW_NUMBER() OVER(PARTITION BY fees.payment_method_id ORDER BY fees.id DESC) as rn
+          FROM public.payment_method_fees fees
+          ORDER BY fees.created_at DESC
+        )
+
+        SELECT
+          payment_methods.id,
+          payment_methods.name,
+          fees.fee,
+          fees.id as fee_id,
+          payment_methods.owner_company_id,
+          payment_methods.updated_at,
+          payment_methods.created_at
+        FROM public.payment_methods payment_methods
+          INNER JOIN payment_method_fees_with_row_number fees 
+            ON fees.payment_method_id = payment_methods.id AND fees.rn = 1
+        WHERE payment_methods.id in (%L) AND payment_methods.owner_company_id = $1
+    `,
+        id.map(({ paymentMethodId }) => paymentMethodId),
+      ),
+      [companyId],
+    )
+
+    return rows.map(PaymentMethodMapper.toDomain)
+  }
+
+  public async getByCompanyId(
+    companyId: number,
+    offset: number,
+    limit: number,
+  ) {
+    const { rows } = await PostgresService.query<{
+      id: number
+      name: string
+      fee: number
+      fee_id: number
       owner_company_id: number
       created_at: Date
       updated_at: Date
+      full_count: number
     }>(
       `--sql
       WITH payment_method_fees_with_row_number AS (
         SELECT
+          fees.id,
           fees.payment_method_id,
           fees.fee,
           ROW_NUMBER() OVER(PARTITION BY fees.payment_method_id ORDER BY fees.id DESC) as rn
@@ -267,18 +331,28 @@ export class PostgresPaymentMethodRepository
         payment_methods.id,
         payment_methods.name,
         fees.fee,
+        fees.id as fee_id,
         payment_methods.owner_company_id,
         payment_methods.created_at,
-        payment_methods.updated_at
+        payment_methods.updated_at,
+        count(*) OVER() AS full_count
       FROM public.payment_methods payment_methods
         INNER JOIN payment_method_fees_with_row_number fees 
           ON fees.payment_method_id = payment_methods.id AND fees.rn = 1
       WHERE owner_company_id = $1
+      ORDER BY payment_methods.created_at DESC
+      OFFSET $2
+      LIMIT $3
     `,
-      [companyId],
+      [companyId, offset, limit],
     )
 
-    return rows.map(PaymentMethodMapper.toDomain)
+    const count = ArrayCountAll.countAll(rows)
+
+    return ArrayCountAll.fromArray(
+      rows.map(PaymentMethodMapper.toDomain),
+      count,
+    )
   }
 
   public async delete(paymentMethodId: number): Promise<void> {

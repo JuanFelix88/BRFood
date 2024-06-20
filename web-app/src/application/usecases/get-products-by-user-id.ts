@@ -4,7 +4,9 @@ import { Product } from "../entities/Product/Product"
 import { ProductRepository } from "../repositories/product-repository"
 import { UserRepository } from "../repositories/user-repository"
 import { UserErrors } from "../errors/user"
+import { injectable } from "@/src/shared/utils/dependency-injection"
 
+@injectable()
 export class GetProductsByUserId implements Usecase {
   constructor(
     private readonly productRepository: ProductRepository,

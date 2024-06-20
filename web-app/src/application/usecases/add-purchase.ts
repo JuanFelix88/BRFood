@@ -4,6 +4,7 @@ import { PurchaseErrors } from "../errors/purchase"
 import { CurrencyValue } from "@/src/shared/entities/CurrencyValue"
 import { PurchaseRepository } from "../repositories/purchase-repository"
 import { AmountValue } from "@/src/shared/entities/AmountValue"
+import { injectable } from "@/src/shared/utils/dependency-injection"
 
 interface AddPurchaseData {
   rawMaterialId: number
@@ -11,10 +12,11 @@ interface AddPurchaseData {
   unitPrice: CurrencyValue
 }
 
+@injectable()
 export class AddPurchase implements Usecase {
   constructor(
     private readonly rawMaterialRepository: RawMaterialRepository,
-    private readonly purchaseRepository: PurchaseRepository
+    private readonly purchaseRepository: PurchaseRepository,
   ) {}
 
   public async handle({

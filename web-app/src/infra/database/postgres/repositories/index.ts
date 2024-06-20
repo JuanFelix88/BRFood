@@ -1,0 +1,6 @@
+export * from "./postgres-company-owner-transfer-repository"
+export * from "./postgres-company-repository"
+export * from "./postgres-payment-method-repository"
+export * from "./postgres-product-repository"
+export * from "./postgres-sale-repository"
+export * from "./postgres-user-repository"

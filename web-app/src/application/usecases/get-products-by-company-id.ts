@@ -5,13 +5,23 @@ import { ProductRepository } from "../repositories/product-repository"
 import { UUID } from "@/src/shared/entities/UUID"
 import { AuthErrors } from "../errors/auth"
 import { CompanyRepository } from "../repositories/company-repository"
+import { Pagination } from "@/src/shared/entities/Pagination"
+import { ArrayCountAll } from "@/src/shared/entities/ArrayCountAll"
+import { injectable } from "@/src/shared/utils/dependency-injection"
 
+@injectable()
 export class GetProductsByCompanyId implements Usecase {
   constructor(
     private readonly productRepository: ProductRepository,
     private readonly companyRepository: CompanyRepository,
   ) {}
-  public async handle(companyId: number, userId: UUID): Promise<Product[]> {
+  public async handle(
+    companyId: number,
+    userId: UUID,
+    pagination: Pagination,
+  ): Promise<ArrayCountAll<Product>> {
+    pagination.throws.ifLimitIsGreaterThan(50)
+
     if (typeof companyId !== "number" || isNaN(companyId)) {
       throw new CompanyErrors.IdCompanyIsMissingError()
     }
@@ -34,6 +44,10 @@ export class GetProductsByCompanyId implements Usecase {
       throw new AuthErrors.YouCannotHasAccessToThisCompanyError()
     }
 
-    return await this.productRepository.getByCompanyId(company.id)
+    return await this.productRepository.getByCompanyId(
+      company.id,
+      pagination.offset,
+      pagination.limit,
+    )
   }
 }
