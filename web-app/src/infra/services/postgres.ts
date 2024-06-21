@@ -1,7 +1,6 @@
 import { PostgresErrors } from "@/src/application/errors/postgres"
 import { StaticClass } from "@/src/shared/utils/static-class"
 import { Pool, PoolClient, QueryResultRow } from "pg"
-import format from "pg-format"
 
 export enum PostgresTypes {
   BOOL = 16,

@@ -23,4 +23,5 @@ export abstract class UserRepository {
   public abstract exists(id: UUID): Promise<boolean>
   public abstract get(id: UUID): Promise<User>
   public abstract getByEmail(email: Email): Promise<User>
+  public abstract getManyByEmail(emails: Email[]): Promise<User[]>
 }

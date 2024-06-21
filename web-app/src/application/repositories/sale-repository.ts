@@ -1,7 +1,7 @@
 import { Sale } from "@/src/application/entities/Sale/Sale"
+import { ArrayCountAll } from "@/src/shared/entities/ArrayCountAll"
 import { CurrencyValue } from "@/src/shared/entities/CurrencyValue"
 import { UUID } from "@/src/shared/entities/UUID"
-import { ArrayCountAll } from "@/src/shared/entities/ArrayCountAll"
 
 export namespace SaleRepository {
   export interface AddPayload {
@@ -23,5 +23,6 @@ export abstract class SaleRepository {
     limit: number,
   ): Promise<ArrayCountAll<Sale>>
   public abstract save(sale: Sale): Promise<void>
+  public abstract hasSalesByProductId(productId: number): Promise<boolean>
   public abstract cancel(saleId: number, authorId: UUID): Promise<void>
 }

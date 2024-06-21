@@ -40,11 +40,12 @@ export class PostgresCompanyRepository implements CompanyRepository {
       }
 
       await this.addAuthorizedUsers(
-        authorizedUsersIds.map((id) => ({
-          userId: id,
-          companyId: rowsCreateCompany[0].id,
+        authorizedUsersIds.map((userId) => ({
+          userId,
           authorId: ownerUserId,
+          companyId: rowsCreateCompany[0].id,
         })),
+        client.query.bind(client),
       )
 
       await client.query("COMMIT")
@@ -65,8 +66,9 @@ export class PostgresCompanyRepository implements CompanyRepository {
 
   public async addAuthorizedUsers(
     authorizes: CompanyRepository.AddAuthorizedUserPayload[],
+    query = PostgresService.query,
   ): Promise<void> {
-    const { rowCount } = await PostgresService.query<{ id: number }>(
+    const { rowCount } = await query<{ id: number }>(
       f(
         `--sql
       INSERT INTO public.company_authorized_users(user_id, company_id, author_id)
@@ -130,6 +132,57 @@ export class PostgresCompanyRepository implements CompanyRepository {
       created_at: rowsCompany[0].created_at,
       updated_at: rowsCompany[0].updated_at,
     })
+  }
+
+  public async getByAuthorizedUserId(userId: UUID): Promise<Company[]> {
+    const { rows: rowsCompany } = await PostgresService.query<{
+      id: number
+      name: string
+      owner_user_id: string
+      updated_at: Date
+      created_at: Date
+    }>(
+      `--sql
+        SELECT 
+          companies.id,
+          companies.name,
+          companies.owner_user_id,
+          companies.updated_at,
+          companies.created_at
+        FROM public.companies companies
+          INNER JOIN public.company_authorized_users auth_users
+            ON auth_users.company_id = companies.id AND auth_users.user_id = $1
+        ORDER BY companies.created_at DESC
+      `,
+      [userId.toString()],
+    )
+
+    if (rowsCompany.length === 0) {
+      throw new CompanyErrors.CompanyNotFoundError()
+    }
+
+    const queryGetRowAuthorizedUsers = f(
+      `--sql
+      SELECT users.user_id, users.company_id
+      FROM public.company_authorized_users users
+      WHERE users.company_id IN (%L)
+    `,
+      rowsCompany.map(({ id }) => id),
+    )
+
+    const { rows: rowsAuthorizedUsers } = await PostgresService.query<{
+      user_id: string
+      company_id: number
+    }>(queryGetRowAuthorizedUsers)
+
+    const companies = rowsCompany.map((company) => ({
+      ...company,
+      authorized_users_ids: rowsAuthorizedUsers
+        .filter((authUser) => authUser.company_id === company.id)
+        .map((user) => user.user_id),
+    }))
+
+    return companies.map(CompanyMapper.toDomain)
   }
 
   public async update(

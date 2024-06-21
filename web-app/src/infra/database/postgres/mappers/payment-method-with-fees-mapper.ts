@@ -1,6 +1,6 @@
 import { PaymentMethodWithFees } from "@/src/application/entities/PaymentMethod/PaymentMethodWithFees"
 import { MapperErrors } from "@/src/application/errors"
-import { CurrencyValue, DateTime } from "@/src/shared/entities"
+import { CurrencyValue, DateTime, UUID } from "@/src/shared/entities"
 import { StaticClass } from "@/src/shared/utils"
 
 export class PaymentMethodWithFeesMapper extends StaticClass {
@@ -15,6 +15,8 @@ export class PaymentMethodWithFeesMapper extends StaticClass {
     owner_company_id: number
     created_at: Date
     updated_at: Date
+    author_id: string
+    author_name: string
   }): PaymentMethodWithFees {
     try {
       return {
@@ -26,8 +28,12 @@ export class PaymentMethodWithFeesMapper extends StaticClass {
           createdAt: DateTime.fromDate(fee.created_at),
         })),
         ownerCompanyId: Number(raw.owner_company_id),
-        createdAt: DateTime.fromDate(raw.created_at),
+        author: {
+          id: new UUID(raw.author_id),
+          name: String(raw.author_name),
+        },
         updatedAt: DateTime.fromDate(raw.updated_at),
+        createdAt: DateTime.fromDate(raw.created_at),
       }
     } catch (error: any) {
       throw new MapperErrors.MappingError(PaymentMethodWithFeesMapper, error.message)

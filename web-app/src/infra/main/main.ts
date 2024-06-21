@@ -1,4 +1,6 @@
 import { AcceptCompanyTransferOwner } from "@/src/application/usecases/accept-company-transfer-owner"
+import { AddAuthorizedUsersToCompany } from "@/src/application/usecases/add-authorized-users-to-company"
+import { AddCompany } from "@/src/application/usecases/add-company"
 import { AddPaymentMethod } from "@/src/application/usecases/add-payment-method"
 import { AddProduct } from "@/src/application/usecases/add-product"
 import { AddPurchase } from "@/src/application/usecases/add-purchase"
@@ -9,8 +11,10 @@ import { DeclineCompanyTransferOwner } from "@/src/application/usecases/decline-
 import { DeleteCompanyTransferOwner } from "@/src/application/usecases/delete-company-transfer-owner"
 import { DeletePaymentMethodById } from "@/src/application/usecases/delete-payment-method-by-id"
 import { DeleteProductById } from "@/src/application/usecases/delete-product-by-id"
+import { GetCompaniesByUser } from "@/src/application/usecases/get-companies-by-user"
 import { GetCompanyById } from "@/src/application/usecases/get-company-by-id"
 import { GetCompanySales } from "@/src/application/usecases/get-company-sales"
+import { GetPaymentMethodWithFees } from "@/src/application/usecases/get-payment-method-with-fees"
 import { GetPaymentMethodsByCompanyId } from "@/src/application/usecases/get-payment-methods-by-company-id"
 import { GetProductById } from "@/src/application/usecases/get-product-by-id"
 import { GetProductsByCompanyId } from "@/src/application/usecases/get-products-by-company-id"
@@ -34,6 +38,8 @@ console.time("construct1")
 class Main {
   constructor(
     public readonly acceptCompanyTransferOwner: AcceptCompanyTransferOwner,
+    public readonly addAuthorizedUsersToCompany: AddAuthorizedUsersToCompany,
+    public readonly addCompany: AddCompany,
     public readonly addPaymentMethod: AddPaymentMethod,
     public readonly addProduct: AddProduct,
     public readonly addPurchase: AddPurchase,
@@ -44,8 +50,10 @@ class Main {
     public readonly deleteCompanyTransferOwner: DeleteCompanyTransferOwner,
     public readonly deletePaymentMethodById: DeletePaymentMethodById,
     public readonly deleteProductById: DeleteProductById,
+    public readonly getCompaniesByUser: GetCompaniesByUser,
     public readonly getCompanyById: GetCompanyById,
     public readonly getCompanySales: GetCompanySales,
+    public readonly getPaymentMethodWithFees: GetPaymentMethodWithFees,
     public readonly getPaymentMethodsByCompanyId: GetPaymentMethodsByCompanyId,
     public readonly getProductById: GetProductById,
     public readonly getProductsByCompanyId: GetProductsByCompanyId,

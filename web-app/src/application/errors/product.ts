@@ -1,7 +1,6 @@
 import { AppError } from "@/src/shared/entities/AppError"
 import { Lang } from "@/src/shared/intl/lang"
 import { StatusCodes } from "http-status-codes"
-import { extname } from "path"
 
 export namespace ProductErrors {
   export class MissingInputName extends AppError {
@@ -26,9 +25,7 @@ export namespace ProductErrors {
     constructor(n: number) {
       super("Product price is negative", {
         [Lang.EN]: `The product price is negative: ${n}`,
-        [Lang.PT_BR]: `O valor do produto não pode ser negativo: ${n
-          .toFixed(2)
-          .replace(".", ",")}`,
+        [Lang.PT_BR]: `O valor do produto não pode ser negativo: ${n.toFixed(2).replace(".", ",")}`,
       })
     }
   }
@@ -84,6 +81,16 @@ export namespace ProductErrors {
       super("Product Not Updated", {
         [Lang.EN]: `The product was not updated in the database due to an error`,
         [Lang.PT_BR]: `O produto não foi atualizado na base de dados devido a um erro`,
+      })
+      this.status(StatusCodes.NOT_FOUND)
+    }
+  }
+
+  export class NotAllowedDeleteProductHasSalesError extends AppError {
+    constructor() {
+      super("Not Allowed Delete Product Has Sales", {
+        [Lang.EN]: `It is not allowed to exclude because there are sales issued to this product`,
+        [Lang.PT_BR]: `Não é permitido excluir pois há vendas emitidas para este produto`,
       })
       this.status(StatusCodes.NOT_FOUND)
     }

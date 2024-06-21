@@ -1,13 +1,13 @@
 import { Sale } from "@/src/application/entities/Sale/Sale"
+import { SaleErrors } from "@/src/application/errors/sale"
 import { SaleRepository } from "@/src/application/repositories/sale-repository"
 import { PostgresService } from "@/src/infra/services/postgres"
-import { SaleMapper } from "../mappers/sale-mapper"
-import { GetMapperInputType } from "@/src/shared/utils/get-mapper-input-type"
-import { SaleErrors } from "@/src/application/errors/sale"
-import f from "pg-format"
-import { UUID } from "@/src/shared/entities/UUID"
 import { ArrayCountAll } from "@/src/shared/entities/ArrayCountAll"
+import { UUID } from "@/src/shared/entities/UUID"
 import { injectable } from "@/src/shared/utils/dependency-injection"
+import { GetMapperInputType } from "@/src/shared/utils/get-mapper-input-type"
+import f from "pg-format"
+import { SaleMapper } from "../mappers/sale-mapper"
 
 @injectable("Postgres")
 export class PostgresSaleRepository implements SaleRepository {
@@ -141,14 +141,12 @@ export class PostgresSaleRepository implements SaleRepository {
           FROM inserted_payment_methods ipm
             INNER JOIN public.payment_methods pm ON pm.id = ipm.payment_method_id
       `,
-          paymentMethods.map(
-            ({ paymentMethodId, value, paymentMethodFeeId }) => [
-              saleId,
-              paymentMethodId,
-              paymentMethodFeeId,
-              value.int,
-            ],
-          ),
+          paymentMethods.map(({ paymentMethodId, value, paymentMethodFeeId }) => [
+            saleId,
+            paymentMethodId,
+            paymentMethodFeeId,
+            value.int,
+          ]),
         ),
       )
 
@@ -436,5 +434,18 @@ export class PostgresSaleRepository implements SaleRepository {
 
   public async save(sale: Sale): Promise<void> {
     throw new Error("Not implemented")
+  }
+
+  public async hasSalesByProductId(productId: number): Promise<boolean> {
+    const { rowCount } = await PostgresService.query(
+      `--sql
+        SELECT 1
+        FROM public.sales_products
+        WHERE product_id = $1
+      `,
+      [productId],
+    )
+
+    return (rowCount ?? 0) > 0
   }
 }
