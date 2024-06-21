@@ -1,0 +1,554 @@
+{
+  "clientName": "Thunder Client",
+  "collectionName": "BRFood",
+  "collectionId": "176df0bc-57ad-45ea-81fb-fb41344be1c8",
+  "dateExported": "2024-06-20T20:57:15.778Z",
+  "version": "1.2",
+  "folders": [
+    {
+      "_id": "d4d5ca5a-866e-42aa-835f-abc38f41a425",
+      "name": "Auth",
+      "containerId": "",
+      "created": "2024-06-14T18:54:18.921Z",
+      "sortNum": 10000
+    },
+    {
+      "_id": "88043405-7cd5-42a6-b8ec-7ed764425a88",
+      "name": "Companies",
+      "containerId": "",
+      "created": "2024-06-14T18:54:32.702Z",
+      "sortNum": 20000
+    },
+    {
+      "_id": "e47e001e-131e-4a9a-ac13-0dada9da25df",
+      "name": "Received Company Transfer Owner",
+      "containerId": "",
+      "created": "2024-06-19T20:48:08.696Z",
+      "sortNum": 25000
+    },
+    {
+      "_id": "c0eec84e-75b7-4be7-ba58-66ada08ba101",
+      "name": "Sended Company Transfer Owner",
+      "containerId": "",
+      "created": "2024-06-20T18:22:08.818Z",
+      "sortNum": 27500
+    },
+    {
+      "_id": "45394093-bcd3-4ec8-a4cf-ca5b6f8e97be",
+      "name": "Products Company",
+      "containerId": "",
+      "created": "2024-06-14T18:54:56.398Z",
+      "sortNum": 30000
+    },
+    {
+      "_id": "dd2b53b1-4bbe-4cf1-831a-1e19ea0d3d80",
+      "name": "Products",
+      "containerId": "",
+      "created": "2024-06-14T20:15:40.332Z",
+      "sortNum": 35000
+    },
+    {
+      "_id": "250d487f-9755-43f4-90dc-aa249a9f12f3",
+      "name": "Payment Methods Company",
+      "containerId": "",
+      "created": "2024-06-14T18:55:19.198Z",
+      "sortNum": 40000
+    },
+    {
+      "_id": "f6c0f948-ca54-449e-afe7-8482bd1d5101",
+      "name": "Payment Methods",
+      "containerId": "",
+      "created": "2024-06-14T20:44:29.546Z",
+      "sortNum": 50000
+    },
+    {
+      "_id": "96a2b237-0ca4-48b1-9b40-0d4e7c086632",
+      "name": "Sales Company",
+      "containerId": "",
+      "created": "2024-06-17T18:46:27.574Z",
+      "sortNum": 70000
+    },
+    {
+      "_id": "82eb60a3-f880-490f-b28d-3ad5f34ca996",
+      "name": "Sales",
+      "containerId": "",
+      "created": "2024-06-18T14:04:59.114Z",
+      "sortNum": 80000
+    },
+    {
+      "_id": "cfd44c20-540c-40cf-b06f-f589b4e3c276",
+      "name": "Purchases Company",
+      "containerId": "",
+      "created": "2024-06-20T19:05:21.062Z",
+      "sortNum": 90000
+    }
+  ],
+  "requests": [
+    {
+      "_id": "e63d7eea-796a-4ee8-904b-c82a267f58f2",
+      "colId": "176df0bc-57ad-45ea-81fb-fb41344be1c8",
+      "containerId": "d4d5ca5a-866e-42aa-835f-abc38f41a425",
+      "name": "SignUp",
+      "url": "http://localhost:3000/api/v1/auth/signup",
+      "method": "POST",
+      "sortNum": 10000,
+      "created": "2024-06-12T18:38:27.786Z",
+      "modified": "2024-06-13T17:51:57.017Z",
+      "headers": [],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"email\": \"d231a2@a23.com\",\n  \"password\": \"12345678\",\n  \"confirmPassword\": \"12345678\",\n  \"name\": \"TESTER\"\n}",
+        "form": []
+      }
+    },
+    {
+      "_id": "d955226e-97c6-448b-9f11-e9a4d71fa8cd",
+      "colId": "176df0bc-57ad-45ea-81fb-fb41344be1c8",
+      "containerId": "88043405-7cd5-42a6-b8ec-7ed764425a88",
+      "name": "Get company",
+      "url": "http://localhost:3000/api/v1/companies/27",
+      "method": "GET",
+      "sortNum": 10000,
+      "created": "2024-06-13T19:11:20.239Z",
+      "modified": "2024-06-14T20:01:39.277Z",
+      "headers": [
+        {
+          "name": "x-auth-token",
+          "value": "{{TOKEN}}"
+        }
+      ]
+    },
+    {
+      "_id": "877603aa-506d-4a44-9dbb-3356a22279cf",
+      "colId": "176df0bc-57ad-45ea-81fb-fb41344be1c8",
+      "containerId": "250d487f-9755-43f4-90dc-aa249a9f12f3",
+      "name": "Get payment methods in company",
+      "url": "http://localhost:3000/api/v1/companies/27/payment-methods",
+      "method": "GET",
+      "sortNum": 10000,
+      "created": "2024-06-14T17:15:03.692Z",
+      "modified": "2024-06-20T20:47:27.155Z",
+      "headers": [
+        {
+          "name": "x-auth-token",
+          "value": "{{TOKEN}}"
+        }
+      ]
+    },
+    {
+      "_id": "542d692e-9209-4e73-94b5-0422eafd753d",
+      "colId": "176df0bc-57ad-45ea-81fb-fb41344be1c8",
+      "containerId": "dd2b53b1-4bbe-4cf1-831a-1e19ea0d3d80",
+      "name": "/v1/products",
+      "url": "http://localhost:3000/api/v1/products",
+      "method": "GET",
+      "sortNum": 10000,
+      "created": "2024-06-14T20:15:40.332Z",
+      "modified": "2024-06-14T20:15:40.332Z",
+      "headers": [
+        {
+          "name": "x-auth-token",
+          "value": "{{TOKEN}}"
+        }
+      ]
+    },
+    {
+      "_id": "b63ebb35-26ed-453b-acb2-75b1646bb073",
+      "colId": "176df0bc-57ad-45ea-81fb-fb41344be1c8",
+      "containerId": "96a2b237-0ca4-48b1-9b40-0d4e7c086632",
+      "name": "Get company sales",
+      "url": "http://localhost:3000/api/v1/companies/27/sales",
+      "method": "GET",
+      "sortNum": 10000,
+      "created": "2024-06-17T18:46:35.115Z",
+      "modified": "2024-06-20T19:46:59.122Z",
+      "headers": [
+        {
+          "name": "x-auth-token",
+          "value": "{{TOKEN}}"
+        }
+      ],
+      "params": [
+        {
+          "name": "per_page",
+          "value": "10",
+          "isDisabled": true,
+          "isPath": false
+        },
+        {
+          "name": "page",
+          "value": "1",
+          "isDisabled": true,
+          "isPath": false
+        }
+      ]
+    },
+    {
+      "_id": "04a10c5d-5aa8-45df-850e-086afdea50a5",
+      "colId": "176df0bc-57ad-45ea-81fb-fb41344be1c8",
+      "containerId": "82eb60a3-f880-490f-b28d-3ad5f34ca996",
+      "name": "Cancel sale",
+      "url": "http://localhost:3000/api/v1/sales/19",
+      "method": "DELETE",
+      "sortNum": 10000,
+      "created": "2024-06-18T14:04:59.114Z",
+      "modified": "2024-06-19T11:24:46.046Z",
+      "headers": [
+        {
+          "name": "x-auth-token",
+          "value": "{{TOKEN}}"
+        }
+      ]
+    },
+    {
+      "_id": "747d4e56-78ef-4f91-9deb-0a261d3efdc4",
+      "colId": "176df0bc-57ad-45ea-81fb-fb41344be1c8",
+      "containerId": "e47e001e-131e-4a9a-ac13-0dada9da25df",
+      "name": "Get received company transfer owners",
+      "url": "http://localhost:3000/api/v1/company-transfer-owners/received",
+      "method": "GET",
+      "sortNum": 10000,
+      "created": "2024-06-19T20:48:08.696Z",
+      "modified": "2024-06-20T18:18:35.829Z",
+      "headers": [
+        {
+          "name": "x-auth-token",
+          "value": "{{TOKEN}}"
+        }
+      ]
+    },
+    {
+      "_id": "1afff1ce-49d4-40b4-a200-b8e9bc595fe1",
+      "colId": "176df0bc-57ad-45ea-81fb-fb41344be1c8",
+      "containerId": "cfd44c20-540c-40cf-b06f-f589b4e3c276",
+      "name": "Get company sales",
+      "url": "http://localhost:3000/api/v1/companies/27/sales?per_page=10&page=1",
+      "method": "GET",
+      "sortNum": 10000,
+      "created": "2024-06-20T19:05:21.062Z",
+      "modified": "2024-06-20T19:05:21.062Z",
+      "headers": [
+        {
+          "name": "x-auth-token",
+          "value": "{{TOKEN}}"
+        }
+      ],
+      "params": [
+        {
+          "name": "per_page",
+          "value": "10",
+          "isPath": false
+        },
+        {
+          "name": "page",
+          "value": "1",
+          "isPath": false
+        }
+      ]
+    },
+    {
+      "_id": "b9f26413-4a7f-4805-92e4-78b2cb902055",
+      "colId": "176df0bc-57ad-45ea-81fb-fb41344be1c8",
+      "containerId": "e47e001e-131e-4a9a-ac13-0dada9da25df",
+      "name": "Accept company owner",
+      "url": "http://localhost:3000/api/v1/company-transfer-owners/received/1",
+      "method": "PATCH",
+      "sortNum": 15000,
+      "created": "2024-06-19T20:52:17.782Z",
+      "modified": "2024-06-20T18:43:21.019Z",
+      "headers": [
+        {
+          "name": "x-auth-token",
+          "value": "{{TOKEN}}"
+        }
+      ]
+    },
+    {
+      "_id": "2709b990-7e57-4bfd-8ab2-fa77f1d044bd",
+      "colId": "176df0bc-57ad-45ea-81fb-fb41344be1c8",
+      "containerId": "d4d5ca5a-866e-42aa-835f-abc38f41a425",
+      "name": "SignIn",
+      "url": "http://localhost:3000/api/v1/auth/signin",
+      "method": "POST",
+      "sortNum": 20000,
+      "created": "2024-06-13T14:30:46.323Z",
+      "modified": "2024-06-19T11:08:27.254Z",
+      "headers": [],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"email\": \"da2@a23.com\",\n  \"password\": \"12345678\"\n}",
+        "form": []
+      }
+    },
+    {
+      "_id": "be78fe38-52ee-407b-abca-92529ee9c697",
+      "colId": "176df0bc-57ad-45ea-81fb-fb41344be1c8",
+      "containerId": "250d487f-9755-43f4-90dc-aa249a9f12f3",
+      "name": "Create payment method in company",
+      "url": "http://localhost:3000/api/v1/companies/27/payment-methods",
+      "method": "POST",
+      "sortNum": 20000,
+      "created": "2024-06-14T18:09:41.786Z",
+      "modified": "2024-06-14T20:55:27.287Z",
+      "headers": [
+        {
+          "name": "x-auth-token",
+          "value": "{{TOKEN}}"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"name\": \"Mercado Pago 2\",\n  \"fee\": 2\n}",
+        "form": []
+      }
+    },
+    {
+      "_id": "cb96a436-1609-4a53-8f29-5dc50a640f05",
+      "colId": "176df0bc-57ad-45ea-81fb-fb41344be1c8",
+      "containerId": "45394093-bcd3-4ec8-a4cf-ca5b6f8e97be",
+      "name": "Get products by company",
+      "url": "http://localhost:3000/api/v1/companies/26/products?page=1",
+      "method": "GET",
+      "sortNum": 20000,
+      "created": "2024-06-14T18:48:29.079Z",
+      "modified": "2024-06-20T20:46:49.227Z",
+      "headers": [
+        {
+          "name": "x-auth-token",
+          "value": "{{TOKEN}}"
+        }
+      ],
+      "params": [
+        {
+          "name": "page",
+          "value": "1",
+          "isPath": false
+        },
+        {
+          "name": "per_page",
+          "value": "2",
+          "isDisabled": true,
+          "isPath": false
+        }
+      ]
+    },
+    {
+      "_id": "34469cca-bb18-49da-be17-1f7c41e650dc",
+      "colId": "176df0bc-57ad-45ea-81fb-fb41344be1c8",
+      "containerId": "96a2b237-0ca4-48b1-9b40-0d4e7c086632",
+      "name": "Create sale company",
+      "url": "http://localhost:3000/api/v1/companies/27/sales",
+      "method": "POST",
+      "sortNum": 20000,
+      "created": "2024-06-17T20:26:07.646Z",
+      "modified": "2024-06-18T16:52:26.430Z",
+      "headers": [
+        {
+          "name": "x-auth-token",
+          "value": "{{TOKEN}}"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"paymentMethods\": [{\n    \"paymentMethodId\": 12,\n    \"value\": 1350\n  }],\n  \"products\": [{\n    \"productId\": 11,\n    \"amount\": 3\n  }],\n  \"note\": \"Teste 1\"\n}",
+        "form": []
+      }
+    },
+    {
+      "_id": "b1745658-1d99-4c92-9d07-eed1d05a0836",
+      "colId": "176df0bc-57ad-45ea-81fb-fb41344be1c8",
+      "containerId": "88043405-7cd5-42a6-b8ec-7ed764425a88",
+      "name": "Update company",
+      "url": "http://localhost:3000/api/v1/companies/27",
+      "method": "PUT",
+      "sortNum": 20000,
+      "created": "2024-06-19T19:26:03.385Z",
+      "modified": "2024-06-19T19:29:41.625Z",
+      "headers": [
+        {
+          "name": "x-auth-token",
+          "value": "{{TOKEN}}"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"name\": \"Novo nome 2.5\"\n}",
+        "form": []
+      }
+    },
+    {
+      "_id": "30a245a5-70a5-452d-be00-042547c58a2c",
+      "colId": "176df0bc-57ad-45ea-81fb-fb41344be1c8",
+      "containerId": "88043405-7cd5-42a6-b8ec-7ed764425a88",
+      "name": "Request transfer owner company to user email",
+      "url": "http://localhost:3000/api/v1/companies/27/owner/a@a23.com",
+      "method": "PUT",
+      "sortNum": 20000,
+      "created": "2024-06-19T20:34:44.125Z",
+      "modified": "2024-06-19T20:37:25.567Z",
+      "headers": [
+        {
+          "name": "x-auth-token",
+          "value": "{{TOKEN}}"
+        }
+      ]
+    },
+    {
+      "_id": "4555e826-4180-495b-b57d-534b4c431426",
+      "colId": "176df0bc-57ad-45ea-81fb-fb41344be1c8",
+      "containerId": "e47e001e-131e-4a9a-ac13-0dada9da25df",
+      "name": "Decline company owner",
+      "url": "http://localhost:3000/api/v1/company-transfer-owners/received/1",
+      "method": "DELETE",
+      "sortNum": 20000,
+      "created": "2024-06-19T20:50:55.191Z",
+      "modified": "2024-06-20T18:43:25.295Z",
+      "headers": [
+        {
+          "name": "x-auth-token",
+          "value": "{{TOKEN}}"
+        }
+      ]
+    },
+    {
+      "_id": "58dd1960-c0c1-42e1-8d7f-a3bae2262506",
+      "colId": "176df0bc-57ad-45ea-81fb-fb41344be1c8",
+      "containerId": "c0eec84e-75b7-4be7-ba58-66ada08ba101",
+      "name": "Delete company owner transfer",
+      "url": "http://localhost:3000/api/v1/company-transfer-owners/1",
+      "method": "DELETE",
+      "sortNum": 20000,
+      "created": "2024-06-20T18:22:08.820Z",
+      "modified": "2024-06-20T18:23:13.431Z",
+      "headers": [
+        {
+          "name": "x-auth-token",
+          "value": "{{TOKEN}}"
+        }
+      ]
+    },
+    {
+      "_id": "dfa04e14-d518-476a-ac78-d5e4493151bf",
+      "colId": "176df0bc-57ad-45ea-81fb-fb41344be1c8",
+      "containerId": "cfd44c20-540c-40cf-b06f-f589b4e3c276",
+      "name": "Create sale company",
+      "url": "http://localhost:3000/api/v1/companies/27/sales",
+      "method": "POST",
+      "sortNum": 20000,
+      "created": "2024-06-20T19:05:21.063Z",
+      "modified": "2024-06-20T19:05:21.062Z",
+      "headers": [
+        {
+          "name": "x-auth-token",
+          "value": "{{TOKEN}}"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"paymentMethods\": [{\n    \"paymentMethodId\": 12,\n    \"value\": 1350\n  }],\n  \"products\": [{\n    \"productId\": 11,\n    \"amount\": 3\n  }],\n  \"note\": \"Teste 1\"\n}",
+        "form": []
+      }
+    },
+    {
+      "_id": "f1ad381f-4263-47cb-a75c-5a21adef6701",
+      "colId": "176df0bc-57ad-45ea-81fb-fb41344be1c8",
+      "containerId": "45394093-bcd3-4ec8-a4cf-ca5b6f8e97be",
+      "name": "Create product in company",
+      "url": "http://localhost:3000/api/v1/companies/27/products",
+      "method": "POST",
+      "sortNum": 30000,
+      "created": "2024-06-14T20:15:40.334Z",
+      "modified": "2024-06-14T20:42:45.077Z",
+      "headers": [
+        {
+          "name": "x-auth-token",
+          "value": "{{TOKEN}}"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"name\": \"Produto 044\",\n  \"price\": 450,\n  \"profit\": 60\n}",
+        "form": []
+      }
+    },
+    {
+      "_id": "a3cc06df-0f7e-4750-8df5-e1b776f08d62",
+      "colId": "176df0bc-57ad-45ea-81fb-fb41344be1c8",
+      "containerId": "f6c0f948-ca54-449e-afe7-8482bd1d5101",
+      "name": "Update payment method",
+      "url": "http://localhost:3000/api/v1/payment-methods/12",
+      "method": "PUT",
+      "sortNum": 30000,
+      "created": "2024-06-14T20:44:29.548Z",
+      "modified": "2024-06-18T13:48:59.174Z",
+      "headers": [
+        {
+          "name": "x-auth-token",
+          "value": "{{TOKEN}}"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"name\": \"Mercado Pago Online 2.6\",\n  \"fee\": 4\n}",
+        "form": []
+      }
+    },
+    {
+      "_id": "e7d1455a-232b-4145-b9d3-a311f6759c99",
+      "colId": "176df0bc-57ad-45ea-81fb-fb41344be1c8",
+      "containerId": "dd2b53b1-4bbe-4cf1-831a-1e19ea0d3d80",
+      "name": "Update product in company",
+      "url": "http://localhost:3000/api/v1/products/11",
+      "method": "PUT",
+      "sortNum": 40000,
+      "created": "2024-06-14T20:15:40.335Z",
+      "modified": "2024-06-18T13:29:56.296Z",
+      "headers": [
+        {
+          "name": "x-auth-token",
+          "value": "{{TOKEN}}"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"name\": \"Produto 044.4\",\n  \"price\": 450,\n  \"profit\": 57\n}",
+        "form": []
+      }
+    },
+    {
+      "_id": "7372467c-c8f0-4b26-9390-02eaeef464a1",
+      "colId": "176df0bc-57ad-45ea-81fb-fb41344be1c8",
+      "containerId": "f6c0f948-ca54-449e-afe7-8482bd1d5101",
+      "name": "Delete payment method",
+      "url": "http://localhost:3000/api/v1/payment-methods/17",
+      "method": "DELETE",
+      "sortNum": 40000,
+      "created": "2024-06-14T20:44:29.549Z",
+      "modified": "2024-06-14T20:56:08.550Z",
+      "headers": [
+        {
+          "name": "x-auth-token",
+          "value": "{{TOKEN}}"
+        }
+      ]
+    },
+    {
+      "_id": "a0d100f0-0b8c-45e5-b740-7a5f95ab644b",
+      "colId": "176df0bc-57ad-45ea-81fb-fb41344be1c8",
+      "containerId": "dd2b53b1-4bbe-4cf1-831a-1e19ea0d3d80",
+      "name": "Delete product in company",
+      "url": "http://localhost:3000/api/v1/products/10",
+      "method": "DELETE",
+      "sortNum": 50000,
+      "created": "2024-06-14T20:15:40.336Z",
+      "modified": "2024-06-14T20:43:30.238Z",
+      "headers": [
+        {
+          "name": "x-auth-token",
+          "value": "{{TOKEN}}"
+        }
+      ]
+    }
+  ],
+  "ref": "G4d8z2pbZzmSFMX-dCEhST4BPtaOhEKBCkQz2CBe6e9FhI7y6tou4tSuiLf17dHN0ZpOaNaEQNxMfcoMu1KBNw"
+}

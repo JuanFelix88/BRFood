@@ -3,14 +3,14 @@ import { spawn } from "node:child_process"
 import path from "node:path"
 import fs from "node:fs"
 
-const relativeUsecasesDir = "src/application/usecases"
+const relativeUsecasesDir = "core/application/usecases"
 const usecasesDir = `${process.cwd()}/${relativeUsecasesDir}`
 
 const usecases = fs
   .readdirSync(usecasesDir)
   .filter((f) => f !== "index.ts")
   .map((f) => f.replace(".ts", ""))
-const mainFile = "./src/infra/main/main.ts"
+const mainFile = "./core/infra/main/main.ts"
 
 const main = fs.readFileSync(mainFile, "utf-8")
 

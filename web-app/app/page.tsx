@@ -1,7 +1,7 @@
-import { GetResponse } from '@/src/shared/utils/get-response';
+import { GetResponse } from '@/core/shared/utils/get-response';
 import Image from "next/image";
 import type { GET } from '@/app/api/v1/products/route'
-import { MethodsExceptions } from '@/src/shared/utils/methods-exceptions';
+import { MethodsExceptions } from '@/core/shared/utils/methods-exceptions';
 
 export default async function Home() {
   const resp = await fetch("http://localhost:3000/api/v1/products")

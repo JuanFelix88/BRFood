@@ -1,15 +1,12 @@
-import { BRFood } from "@/src/infra/main/main"
-import { AuthToken } from "@/src/shared/entities/AuthToken"
-import { CurrencyValue } from "@/src/shared/entities/CurrencyValue"
-import { Pagination } from "@/src/shared/entities/Pagination"
-import { MethodsExceptions } from "@/src/shared/utils/methods-exceptions"
+import { BRFood } from "@/core/infra/main/main"
+import { AuthToken } from "@/core/shared/entities/AuthToken"
+import { CurrencyValue } from "@/core/shared/entities/CurrencyValue"
+import { Pagination } from "@/core/shared/entities/Pagination"
+import { MethodsExceptions } from "@/core/shared/utils/methods-exceptions"
 import { StatusCodes } from "http-status-codes"
 import { NextRequest, NextResponse } from "next/server"
 
-export async function GET(
-  req: NextRequest,
-  cxt: { params: { company_id: string } },
-) {
+export async function GET(req: NextRequest, cxt: { params: { company_id: string } }) {
   try {
     const companyId = Number(cxt.params.company_id)
     const { userId } = AuthToken.getFromNextRequest(req)
@@ -30,10 +27,7 @@ export async function GET(
   }
 }
 
-export async function POST(
-  req: NextRequest,
-  cxt: { params: { company_id: string } },
-) {
+export async function POST(req: NextRequest, cxt: { params: { company_id: string } }) {
   try {
     const { name, fee }: POST.Body = await req.json()
     const companyId = Number(cxt.params.company_id)

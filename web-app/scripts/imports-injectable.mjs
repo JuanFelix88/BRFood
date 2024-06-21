@@ -1,11 +1,11 @@
 import fs from "node:fs"
 
 const locals = [
-  `${process.cwd()}/src/application/usecases`,
-  `${process.cwd()}/src/infra/database/postgres/repositories`,
+  `${process.cwd()}/core/application/usecases`,
+  `${process.cwd()}/core/infra/database/postgres/repositories`,
 ]
 
-createIndexImports(`${process.cwd()}/src`)
+createIndexImports(`${process.cwd()}/core`)
 
 function createIndexImports(dir = "") {
   const items = fs.readdirSync(dir).filter((f) => f !== "index.ts")

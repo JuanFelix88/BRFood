@@ -1,45 +1,107 @@
 {
-	"folders": [
-		{
-			"path": "."
-		}
-	],
-	"settings": {
-		"files.exclude": {
-			"**/.git": true,
-			"**/.svn": true,
-			"**/.hg": true,
-			"**/CVS": true,
-			"**/.DS_Store": true,
-			"**/Thumbs.db": true,
-			"**/BRFood.code-workspace": true
-		},
-		"workbench.editor.customLabels.patterns": {
-			// "*.ts": "${basename} ${filename}",
-		},
-		"symbols.files.associations": {
-			"*.code-workspace": "capacitor",
-			"middleware.ts": "http",
-			"route.ts": "zig",
-		},
-		"symbols.folders.associations": {
-			"infra": "folder-orange",
-			"application": "folder-purple",
-			"http": "folder-blue-outline",
-			"entities": "folder-green-outline",
-			"errors": "folder-red-outline",
-			"repositories": "folder-gray-outline",
-			"usecases": "folder-prisma",
-			"mappers": "folder-yellow-outline"
-		},
-		"[typescript]": {
-			"editor.formatOnSave": true
-		},
-		"cSpell.words": [
-			"Dont",
-			"nocheck",
-			"postgres",
-			"signin"
-		],
-	},
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "**/.git": true,
+      "**/.svn": true,
+      "**/.hg": true,
+      "**/CVS": true,
+      "**/.DS_Store": true,
+      "**/Thumbs.db": true,
+      "**/BRFood.code-workspace": true,
+      "**/.next": true
+    },
+    "workbench.editor.customLabels.patterns": {
+      "**/route.ts": "(Route) / ${dirname} / route.ts",
+      "**/application/repositories/*.ts": "(Repository) ${filename}.${extname}",
+      "**/application/usecases/*.ts": "(Usecase) ${filename}.${extname}",
+      "**/application/errors/*.ts": "(Error) ${filename}.${extname}",
+      "**/entities/**/*.ts": "(Entity) ${filename}.${extname}",
+      "**/mappers/**/*.ts": "(Mapper) ${filename}.${extname}"
+    },
+    "workbench.editor.customLabels.enabled": true,
+    "symbols.files.associations": {
+      "*.code-workspace": "capacitor",
+      "middleware.ts": "http",
+      "route.ts": "zig",
+      "index.ts": "lock"
+    },
+    "symbols.folders.associations": {
+      "infra": "folder-orange",
+      "application": "folder-purple",
+      "http": "folder-blue-outline",
+      "entities": "folder-interfaces",
+      "errors": "folder-red-outline",
+      "repositories": "folder-database",
+      "usecases": "folder-prisma",
+      "mappers": "folder-helpers",
+      "services": "folder-yellow-outline",
+      "factories": "folder-drizzle",
+      "src": "folder-core",
+      "scripts": "folder-config",
+      "api": "folder-router"
+    },
+    "[typescript]": {
+      "editor.formatOnSave": true,
+      "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit"
+      }
+    },
+    "cSpell.words": ["Dont", "nocheck", "postgres", "signin"]
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Auto Imports",
+        "command": "cd ./web-app && node ./scripts/imports-injectable.mjs",
+        "type": "shell",
+        "args": [],
+        "problemMatcher": ["$tsc"],
+        "presentation": {
+          "reveal": "silent",
+          "panel": "shared"
+          // "close": true
+        },
+        "group": "build"
+      },
+      {
+        "label": "Refresh Main",
+        "command": "cd ./web-app && node ./scripts/create-main.mjs",
+        "type": "shell",
+        "args": [],
+        "problemMatcher": ["$tsc"],
+        "presentation": {
+          "reveal": "silent",
+          "panel": "shared"
+          // "close": true
+        },
+        "group": "build"
+      },
+      {
+        "label": "New usecase",
+        "command": "cd ./web-app && node ./scripts/new-usecase.mjs ${input:usecasename}",
+        "type": "shell",
+        "args": [],
+        "problemMatcher": ["$tsc"],
+        "presentation": {
+          "reveal": "silent",
+          "panel": "shared"
+          // "close": true
+        },
+        "group": "build"
+      }
+    ],
+    "inputs": [
+      {
+        "id": "usecasename",
+        "description": "Usecase name",
+        "type": "promptString"
+      }
+    ]
+  }
 }

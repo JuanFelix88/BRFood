@@ -1,13 +1,10 @@
-import { MiddlewareConfig, NextFetchEvent, NextResponse } from "next/server"
-import { NextRequest } from "next/server"
-import { AuthToken } from "./src/shared/entities/AuthToken"
+import { AuthToken } from "@/core/shared/entities/AuthToken"
+import { MiddlewareConfig, NextFetchEvent, NextRequest, NextResponse } from "next/server"
 
 const authRoutes = ["/api/v1/products", "/api/v1/products"]
 
 export function isAuthenticatedRoute(request: NextRequest) {
-  return authRoutes.some((authRoute) =>
-    request.nextUrl.pathname.startsWith(authRoute),
-  )
+  return authRoutes.some((authRoute) => request.nextUrl.pathname.startsWith(authRoute))
 }
 
 export function middleware(request: NextRequest, event: NextFetchEvent) {

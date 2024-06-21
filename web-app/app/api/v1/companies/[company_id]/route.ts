@@ -1,13 +1,10 @@
-import { BRFood } from "@/src/infra/main/main"
-import { AuthToken } from "@/src/shared/entities/AuthToken"
-import { MethodsExceptions } from "@/src/shared/utils/methods-exceptions"
+import { BRFood } from "@/core/infra/main/main"
+import { AuthToken } from "@/core/shared/entities/AuthToken"
+import { MethodsExceptions } from "@/core/shared/utils/methods-exceptions"
 import { StatusCodes } from "http-status-codes"
 import { NextRequest, NextResponse } from "next/server"
 
-export async function GET(
-  req: NextRequest,
-  cxt: { params: { company_id: string } },
-) {
+export async function GET(req: NextRequest, cxt: { params: { company_id: string } }) {
   try {
     const companyId = Number(cxt.params.company_id)
     const { userId } = AuthToken.getFromNextRequest(req)
@@ -22,10 +19,7 @@ export async function GET(
   }
 }
 
-export async function PUT(
-  req: NextRequest,
-  cxt: { params: { company_id: string } },
-) {
+export async function PUT(req: NextRequest, cxt: { params: { company_id: string } }) {
   try {
     const companyId = Number(cxt.params.company_id)
     const { name }: PUT.Body = await req.json()

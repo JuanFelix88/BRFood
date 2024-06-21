@@ -1,16 +1,13 @@
-import { BRFood } from "@/src/infra/main/main"
-import { AuthToken } from "@/src/shared/entities/AuthToken"
-import { IntlMessage } from "@/src/shared/entities/IntlMessage"
-import { Lang } from "@/src/shared/intl/lang"
-import { PrefLang } from "@/src/shared/intl/pref-lang"
-import { MethodsExceptions } from "@/src/shared/utils/methods-exceptions"
+import { BRFood } from "@/core/infra/main/main"
+import { AuthToken } from "@/core/shared/entities/AuthToken"
+import { IntlMessage } from "@/core/shared/entities/IntlMessage"
+import { Lang } from "@/core/shared/intl/lang"
+import { PrefLang } from "@/core/shared/intl/pref-lang"
+import { MethodsExceptions } from "@/core/shared/utils/methods-exceptions"
 import { StatusCodes } from "http-status-codes"
 import { NextRequest, NextResponse } from "next/server"
 
-export async function DELETE(
-  req: NextRequest,
-  cxt: { params: { sale_id: string } },
-) {
+export async function DELETE(req: NextRequest, cxt: { params: { sale_id: string } }) {
   try {
     const saleId = Number(cxt.params.sale_id)
     const { userId } = AuthToken.getFromNextRequest(req)

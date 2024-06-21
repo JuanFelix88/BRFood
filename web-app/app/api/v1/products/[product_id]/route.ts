@@ -1,19 +1,16 @@
-import { BRFood } from "@/src/infra/main/main"
-import { AuthToken } from "@/src/shared/entities/AuthToken"
-import { MethodsExceptions } from "@/src/shared/utils/methods-exceptions"
-import { NextRequest, NextResponse } from "next/server"
 import type { POST } from "@/app/api/v1/companies/[company_id]/products/route"
-import { CurrencyValue } from "@/src/shared/entities/CurrencyValue"
-import { InternalImage } from "@/src/shared/entities/Image"
+import { BRFood } from "@/core/infra/main/main"
+import { AuthToken } from "@/core/shared/entities/AuthToken"
+import { CurrencyValue } from "@/core/shared/entities/CurrencyValue"
+import { InternalImage } from "@/core/shared/entities/Image"
+import { IntlMessage } from "@/core/shared/entities/IntlMessage"
+import { Lang } from "@/core/shared/intl/lang"
+import { PrefLang } from "@/core/shared/intl/pref-lang"
+import { MethodsExceptions } from "@/core/shared/utils/methods-exceptions"
 import { StatusCodes } from "http-status-codes"
-import { PrefLang } from "@/src/shared/intl/pref-lang"
-import { IntlMessage } from "@/src/shared/entities/IntlMessage"
-import { Lang } from "@/src/shared/intl/lang"
+import { NextRequest, NextResponse } from "next/server"
 
-export async function GET(
-  req: NextRequest,
-  cxt: { params: { product_id: string } },
-) {
+export async function GET(req: NextRequest, cxt: { params: { product_id: string } }) {
   try {
     const productId = Number(cxt.params.product_id)
     const { userId } = AuthToken.getFromNextRequest(req)
@@ -26,13 +23,9 @@ export async function GET(
   }
 }
 
-export async function PUT(
-  req: NextRequest,
-  cxt: { params: { product_id: string } },
-) {
+export async function PUT(req: NextRequest, cxt: { params: { product_id: string } }) {
   try {
-    const { name, price, profit, extensionImage, imgBase64 }: PUT.Body =
-      await req.json()
+    const { name, price, profit, extensionImage, imgBase64 }: PUT.Body = await req.json()
 
     const productId = Number(cxt.params.product_id)
     const { userId } = AuthToken.getFromNextRequest(req)
@@ -53,10 +46,7 @@ export async function PUT(
   }
 }
 
-export async function DELETE(
-  req: NextRequest,
-  cxt: { params: { product_id: string } },
-) {
+export async function DELETE(req: NextRequest, cxt: { params: { product_id: string } }) {
   try {
     const productId = Number(cxt.params.product_id)
     const { userId } = AuthToken.getFromNextRequest(req)

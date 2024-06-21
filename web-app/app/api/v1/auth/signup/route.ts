@@ -1,13 +1,12 @@
-import { BRFood } from "@/src/infra/main/main"
-import { Email } from "@/src/shared/entities/Email"
-import { MethodsExceptions } from "@/src/shared/utils/methods-exceptions"
+import { BRFood } from "@/core/infra/main/main"
+import { Email } from "@/core/shared/entities/Email"
+import { MethodsExceptions } from "@/core/shared/utils/methods-exceptions"
 import { StatusCodes } from "http-status-codes"
 import { NextRequest, NextResponse } from "next/server"
 
 export async function POST(req: NextRequest) {
   try {
-    const { email, password, companyName, confirmPassword, name }: POST.Body =
-      await req.json()
+    const { email, password, companyName, confirmPassword, name }: POST.Body = await req.json()
 
     const {
       authToken: token,

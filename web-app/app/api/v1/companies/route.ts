@@ -1,7 +1,7 @@
-import { BRFood } from "@/src/infra/main/main"
-import { Email } from "@/src/shared/entities"
-import { AuthToken } from "@/src/shared/entities/AuthToken"
-import { MethodsExceptions } from "@/src/shared/utils/methods-exceptions"
+import { BRFood } from "@/core/infra/main/main"
+import { Email } from "@/core/shared/entities"
+import { AuthToken } from "@/core/shared/entities/AuthToken"
+import { MethodsExceptions } from "@/core/shared/utils/methods-exceptions"
 import { StatusCodes } from "http-status-codes"
 import { NextRequest, NextResponse } from "next/server"
 

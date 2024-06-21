@@ -3,7 +3,7 @@ import { spawn } from "node:child_process"
 import path from 'node:path'
 import fs from "node:fs"
 
-const usecases = `${process.cwd()}/src/application/usecases`
+const usecases = `${process.cwd()}/core/application/usecases`
 const template = fs.readFileSync(`${usecases}/template.ts`, "utf-8")
 const name = process.argv[2]
 

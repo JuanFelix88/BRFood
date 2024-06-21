@@ -1,8 +1,8 @@
-import { BRFood } from "@/src/infra/main/main"
-import { IntlMessage } from "@/src/shared/entities"
-import { AuthToken } from "@/src/shared/entities/AuthToken"
-import { Lang, PrefLang } from "@/src/shared/intl"
-import { MethodsExceptions } from "@/src/shared/utils/methods-exceptions"
+import { BRFood } from "@/core/infra/main/main"
+import { IntlMessage } from "@/core/shared/entities"
+import { AuthToken } from "@/core/shared/entities/AuthToken"
+import { Lang, PrefLang } from "@/core/shared/intl"
+import { MethodsExceptions } from "@/core/shared/utils/methods-exceptions"
 import { StatusCodes } from "http-status-codes"
 import { NextRequest, NextResponse } from "next/server"
 
