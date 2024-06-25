@@ -1,3 +1,4 @@
+export * from "./postgres-client-credit-repository"
 export * from "./postgres-company-owner-transfer-repository"
 export * from "./postgres-company-repository"
 export * from "./postgres-payment-method-repository"

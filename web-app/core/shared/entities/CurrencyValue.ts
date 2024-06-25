@@ -7,21 +7,15 @@ export class CurrencyValue implements Serializable {
     }
 
     if (isNaN(this.intValue)) {
-      throw new TypeError(
-        "The value informed for currency conversion is incorrect",
-      )
+      throw new TypeError("The value informed for currency conversion is incorrect")
     }
 
     if (typeof this.intValue !== "number") {
-      throw new TypeError(
-        "The value informed for currency conversion is incorrect",
-      )
+      throw new TypeError("The value informed for currency conversion is incorrect")
     }
 
     if (this.intValue.toString().includes(".")) {
-      throw new TypeError(
-        "The value informed for currency conversion must be an integer",
-      )
+      throw new TypeError("The value informed for currency conversion must be an integer")
     }
   }
 

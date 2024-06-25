@@ -36,6 +36,6 @@ export class GetCompanySales implements Usecase {
       throw new CompanyErrors.IsNotAuthorizedError()
     }
 
-    return await this.saleRepository.getByCompanyId(companyId, pagination.offset, pagination.limit)
+    return await this.saleRepository.listByCompanyId(companyId, pagination.offset, pagination.limit)
   }
 }

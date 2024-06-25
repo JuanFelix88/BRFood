@@ -1,6 +1,7 @@
 import { CompanyOwnerTransfer } from "@/core/application/entities/CompanyOwnerTransfer/CompanyOwnerTransfer"
+import { MapperErrors } from "@/core/application/errors"
 import { DateTime, UUID } from "@/core/shared/entities"
-import { StaticClass } from "@/core/shared/utils"
+import { ParsePayload, StaticClass } from "@/core/shared/utils"
 
 export class CompanyOwnerTransferMapper extends StaticClass {
   public static toDomain(raw: {
@@ -12,12 +13,17 @@ export class CompanyOwnerTransferMapper extends StaticClass {
     accepted_at?: Date
     declined_at?: Date
   }): CompanyOwnerTransfer {
-    return {
-      id: raw.id,
-      fromUserId: new UUID(raw.from_user_id),
-      toUserId: new UUID(raw.to_user_id),
-      companyId: Number(raw.company_id),
-      createdAt: DateTime.fromDate(raw.created_at),
+    try {
+      const dataProxy = ParsePayload.handleObjectMapper(raw)
+      return {
+        id: dataProxy.id,
+        fromUserId: new UUID(dataProxy.from_user_id),
+        toUserId: new UUID(dataProxy.to_user_id),
+        companyId: Number(dataProxy.company_id),
+        createdAt: DateTime.fromDate(dataProxy.created_at),
+      }
+    } catch (error) {
+      throw new MapperErrors.MappingError(CompanyOwnerTransferMapper, error)
     }
   }
 }

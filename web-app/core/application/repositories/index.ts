@@ -1,4 +1,5 @@
 export * from "./auth-repository"
+export * from "./client-credit-repository"
 export * from "./company-owner-transfer-repository"
 export * from "./company-repository"
 export * from "./cover-image-repository"

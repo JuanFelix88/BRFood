@@ -4,6 +4,7 @@ import { AuthToken } from "@/core/shared/entities/AuthToken"
 import { MethodsExceptions } from "@/core/shared/utils/methods-exceptions"
 import { StatusCodes } from "http-status-codes"
 import { NextRequest, NextResponse } from "next/server"
+import { z } from "zod"
 
 export async function GET(req: NextRequest) {
   try {
@@ -22,11 +23,11 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const { userId } = AuthToken.getFromNextRequest(req)
-    const { authorizedEmails, companyName }: POST.Body = await req.json()
+    const { authorizedEmails, companyName } = POST.bodySchema.parse(await req.json())
 
     const newCompany = await BRFood.addCompany.handle(
       {
-        authorizedEmails: authorizedEmails.map((email) => new Email(email)),
+        authorizedEmails,
         name: companyName,
       },
       userId,
@@ -39,8 +40,15 @@ export async function POST(req: NextRequest) {
 }
 
 export namespace POST {
-  export interface Body {
-    companyName: string
-    authorizedEmails: string[]
-  }
+  export type Body = z.input<typeof bodySchema>
+
+  export const bodySchema = z.object({
+    companyName: z.string(),
+    authorizedEmails: z.array(
+      z
+        .string()
+        .email()
+        .transform((v) => new Email(v)),
+    ),
+  })
 }

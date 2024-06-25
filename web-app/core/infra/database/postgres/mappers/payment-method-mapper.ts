@@ -2,6 +2,7 @@ import { PaymentMethod } from "@/core/application/entities/PaymentMethod/Payment
 import { MapperErrors } from "@/core/application/errors/mapper"
 import { CurrencyValue } from "@/core/shared/entities/CurrencyValue"
 import { DateTime } from "@/core/shared/entities/DateTime"
+import { ParsePayload } from "@/core/shared/utils"
 import { StaticClass } from "@/core/shared/utils/static-class"
 
 export class PaymentMethodMapper extends StaticClass {
@@ -14,18 +15,19 @@ export class PaymentMethodMapper extends StaticClass {
     created_at: Date
     owner_company_id: number
   }): PaymentMethod {
+    const dataProxy = ParsePayload.handleObjectMapper(raw)
     try {
       return {
-        id: Number(raw.id),
-        name: String(raw.name),
-        lastFee: new CurrencyValue(Number(raw.fee)),
-        lastFeeId: Number(raw.fee_id),
-        updatedAt: DateTime.fromDate(raw.updated_at),
-        createdAt: DateTime.fromDate(raw.created_at),
-        ownerCompanyId: Number(raw.owner_company_id),
+        id: Number(dataProxy.id),
+        name: String(dataProxy.name),
+        lastFee: new CurrencyValue(Number(dataProxy.fee)),
+        lastFeeId: Number(dataProxy.fee_id),
+        updatedAt: DateTime.fromDate(dataProxy.updated_at),
+        createdAt: DateTime.fromDate(dataProxy.created_at),
+        ownerCompanyId: Number(dataProxy.owner_company_id),
       }
     } catch (error: any) {
-      throw new MapperErrors.MappingError(PaymentMethodMapper, error.message)
+      throw new MapperErrors.MappingError(PaymentMethodMapper, error)
     }
   }
 }

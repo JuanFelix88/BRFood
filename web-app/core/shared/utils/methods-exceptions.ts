@@ -1,13 +1,20 @@
-import { NextRequest, NextResponse } from "next/server"
-import { AppError } from "../entities/AppError"
-import { PrefLang } from "../intl/pref-lang"
-import { Lang } from "../intl/lang"
-import { StaticClass } from "./static-class"
+import { MapperErrors } from "@/core/application/errors"
 import { StatusCodes } from "http-status-codes"
+import { NextRequest, NextResponse } from "next/server"
+import { ZodError } from "zod"
+import { AppError } from "../entities/AppError"
+import { Lang } from "../intl/lang"
+import { PrefLang } from "../intl/pref-lang"
+import { StaticClass } from "./static-class"
 
 const DEFAULT_ERROR = {
   [Lang.EN]: "Unidentified internal error of the server",
   [Lang.PT_BR]: "Erro interno não identificado do servidor",
+}
+
+const ZOD_ERROR = {
+  [Lang.EN]: "There is payload error",
+  [Lang.PT_BR]: "Há erros de mapamento de dados",
 }
 
 interface ResponseError {
@@ -27,13 +34,35 @@ export class MethodsExceptions extends StaticClass {
    * Transform error to response
    * @returns NextResponse with error message
    */
-  public static handleError(
-    req: NextRequest,
-    error: any,
-  ): NextResponse<ResponseError> {
+  public static handleError(req: NextRequest, error: any): NextResponse<ResponseError> {
     const prefLang = PrefLang.getFromRequest(req)
 
     this.consoleError(req, error)
+
+    if (error instanceof ZodError) {
+      const errorMessage = ZOD_ERROR[prefLang.lang]
+      return NextResponse.json(
+        {
+          errorMessage,
+          issues: error.flatten().formErrors,
+        },
+        {
+          status: StatusCodes.BAD_REQUEST,
+        },
+      )
+    }
+
+    if (error instanceof MapperErrors.MappingError) {
+      return NextResponse.json(
+        {
+          errorMessage: prefLang.messageFromError(error).errorMessage,
+          issues: error.issues!,
+        },
+        {
+          status: StatusCodes.BAD_REQUEST,
+        },
+      )
+    }
 
     if (error instanceof AppError) {
       return NextResponse.json(prefLang.messageFromError(error), {

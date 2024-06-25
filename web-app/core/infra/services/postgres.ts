@@ -95,6 +95,14 @@ function getTypeParser(type: PostgresTypes) {
       return Number(data.toString())
     }
 
+    if (type === PostgresTypes.JSON) {
+      return JSON.parse(data.toString())
+    }
+
+    if (type === PostgresTypes.TIMESTAMPTZ) {
+      return new Date(data.toString())
+    }
+
     return data
   }
 }

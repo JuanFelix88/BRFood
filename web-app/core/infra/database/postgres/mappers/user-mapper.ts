@@ -3,6 +3,7 @@ import { MapperErrors } from "@/core/application/errors/mapper"
 import { DateTime } from "@/core/shared/entities/DateTime"
 import { Email } from "@/core/shared/entities/Email"
 import { UUID } from "@/core/shared/entities/UUID"
+import { ParsePayload } from "@/core/shared/utils"
 import { StaticClass } from "@/core/shared/utils/static-class"
 
 export class UserMapper extends StaticClass {
@@ -14,15 +15,16 @@ export class UserMapper extends StaticClass {
     deleted_at: Date | null
   }): User {
     try {
+      const dataProxy = ParsePayload.handleObjectMapper(raw)
       return {
-        id: new UUID(raw.id),
-        name: String(raw.name),
-        email: new Email(raw.email),
-        createdAt: DateTime.fromDate(raw.created_at),
-        status: raw.deleted_at === null ? User.Status.Active : User.Status.Inactive,
+        id: new UUID(dataProxy.id),
+        name: String(dataProxy.name),
+        email: new Email(dataProxy.email),
+        createdAt: DateTime.fromDate(dataProxy.created_at),
+        status: dataProxy.deleted_at === null ? User.Status.Active : User.Status.Inactive,
       }
     } catch (error: any) {
-      throw new MapperErrors.MappingError(UserMapper, error.message)
+      throw new MapperErrors.MappingError(UserMapper, error)
     }
   }
 }

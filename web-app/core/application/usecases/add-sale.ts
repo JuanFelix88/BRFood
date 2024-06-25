@@ -1,3 +1,4 @@
+import * as Errors from "@/core/application/errors"
 import { AmountValue } from "@/core/shared/entities/AmountValue"
 import { CurrencyValue } from "@/core/shared/entities/CurrencyValue"
 import { Usecase } from "@/core/shared/entities/Usecase"
@@ -6,15 +7,33 @@ import { injectable } from "@/core/shared/utils/dependency-injection"
 import { Sale } from "../entities/Sale/Sale"
 import { CompanyErrors } from "../errors/company"
 import { SaleErrors } from "../errors/sale"
+import { ClientCreditRepository } from "../repositories/client-credit-repository"
 import { CompanyRepository } from "../repositories/company-repository"
 import { PaymentMethodRepository } from "../repositories/payment-method-repository"
 import { ProductRepository } from "../repositories/product-repository"
 import { SaleRepository } from "../repositories/sale-repository"
 
-interface AddSaleData {
+export namespace AddSaleData {
+  export type PaymentPayload =
+    | {
+        paymentMethodId: number
+        paymentMethodValue: CurrencyValue
+      }
+    | {
+        paymentMethodId: number
+        paymentMethodValue: CurrencyValue
+        clientId: number
+      }
+    | {
+        paymentCreditValue: CurrencyValue
+        clientId: number
+      }
+}
+
+export interface AddSaleData {
   companyId: number
   products: { productId: number; amount: AmountValue }[]
-  paymentMethods: { paymentMethodId: number; value: CurrencyValue }[]
+  payments: AddSaleData.PaymentPayload[]
   note?: string
   authorId: UUID
 }
@@ -26,18 +45,24 @@ export class AddSale implements Usecase {
     private readonly productRepository: ProductRepository,
     private readonly paymentMethodRepository: PaymentMethodRepository,
     private readonly companyRepository: CompanyRepository,
+    private readonly clientCreditRepository: ClientCreditRepository,
   ) {}
+
+  private getValueFromPayment(p: AddSaleData.PaymentPayload): CurrencyValue {
+    if ("paymentCreditValue" in p) return p.paymentCreditValue
+    return p.paymentMethodValue
+  }
 
   public async handle({
     companyId,
-    paymentMethods,
+    payments,
     products,
     note,
     authorId,
   }: AddSaleData): Promise<Sale> {
     note = note?.trim()
 
-    if (!paymentMethods.length) {
+    if (!payments.length) {
       throw new SaleErrors.PaymentMethodsAmountError()
     }
 
@@ -49,22 +74,35 @@ export class AddSale implements Usecase {
       throw new SaleErrors.NoteLengthError()
     }
 
-    const databaseProducts = await this.productRepository.getByIds(products)
+    const isUserAuthorAuthorized = await this.companyRepository.isUserAuthorized(
+      companyId,
+      authorId,
+    )
 
+    if (!isUserAuthorAuthorized) {
+      throw new CompanyErrors.IsNotAuthorizedError()
+    }
+
+    const databaseProducts = await this.productRepository.getByIds(products)
     const getProductById = (productId: number) => databaseProducts.find((p) => p.id === productId)!
 
     const databasePaymentMethods = await this.paymentMethodRepository.getByIds(
-      paymentMethods,
+      payments.filter((p) => "paymentMethodId" in p),
       companyId,
     )
-
     const getPaymentMethodById = (paymentMethodId: number) =>
       databasePaymentMethods.find((p) => p.id === paymentMethodId)!
 
-    const isUserAuthorized = await this.companyRepository.isUserAuthorized(companyId, authorId)
+    const userCreditBalanceTests = await Promise.all(
+      payments
+        .filter((p) => "paymentCreditValue" in p)
+        .map(({ clientId, paymentCreditValue }) =>
+          this.clientCreditRepository.byIdGreatherThan(clientId, paymentCreditValue),
+        ),
+    )
 
-    if (!isUserAuthorized) {
-      throw new CompanyErrors.IsNotAuthorizedError()
+    if (userCreditBalanceTests.some((hasBalance) => hasBalance === false)) {
+      throw new SaleErrors.UserCreditBalanceError()
     }
 
     const checkedProducts = products.map(({ ...product }) => ({
@@ -73,25 +111,45 @@ export class AddSale implements Usecase {
       productPriceId: getProductById(product.productId).lastPriceId,
     }))
 
-    const checkedPaymentMethods = paymentMethods.map(({ ...paymentMethod }) => ({
-      ...paymentMethod,
-      paymentMethodFeeId: getPaymentMethodById(paymentMethod.paymentMethodId).lastFeeId,
-    }))
+    const checkedPayments = payments.map((paymentMethod) => {
+      if ("clientId" in paymentMethod && "paymentMethodId" in paymentMethod) {
+        return {
+          ...paymentMethod,
+          paymentMethodFeeId: getPaymentMethodById(paymentMethod.paymentMethodId).lastFeeId,
+        } as SaleRepository.PaymentPaymentMethodClient
+      }
 
-    const sumPaymentMethodsValue = new CurrencyValue(
-      paymentMethods.reduce((acc, p) => acc + p.value.int, 0),
+      if ("paymentMethodId" in paymentMethod) {
+        return {
+          ...paymentMethod,
+          paymentMethodFeeId: getPaymentMethodById(paymentMethod.paymentMethodId).lastFeeId,
+        } as SaleRepository.PaymentPaymentMethod
+      }
+
+      if ("clientId" in paymentMethod) {
+        return {
+          ...paymentMethod,
+          companyClientId: paymentMethod.clientId,
+        } as SaleRepository.PaymentClientCredit
+      }
+
+      throw new Errors.SaleErrors.CheckPaymentsPayloadError()
+    })
+
+    const sumPaymentsValue = new CurrencyValue(
+      payments.reduce((acc, p) => acc + this.getValueFromPayment(p).int, 0),
     )
 
     const sumProductsValue = new CurrencyValue(
       checkedProducts.reduce((acc, p) => acc + p.price.int * p.amount.int, 0),
     )
 
-    if (sumProductsValue.int !== sumPaymentMethodsValue.int) {
+    if (sumProductsValue.int !== sumPaymentsValue.int) {
       throw new SaleErrors.PaymentMethodsValueError()
     }
 
     return await this.saleRepository.add({
-      paymentMethods: checkedPaymentMethods,
+      paymentPayloads: checkedPayments,
       products: checkedProducts,
       total: sumProductsValue,
       note,

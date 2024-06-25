@@ -121,4 +121,42 @@ export namespace SaleErrors {
       })
     }
   }
+
+  export class UserCreditBalanceError extends AppError {
+    constructor() {
+      super("User credit balance", {
+        [Lang.EN]: "The sale cannot be completed as there is a lack of balance for payment.",
+        [Lang.PT_BR]: "A venda não pode ser concluída pois há falta de saldo para pagamento.",
+      })
+    }
+  }
+
+  export class BalanceDatabaseError extends AppError {
+    constructor() {
+      super("Balance database", {
+        [Lang.EN]: "It was not possible to modify the customer's balance to the database.",
+        [Lang.PT_BR]: "Não foi possível modificar o saldo do cliente na base de dados.",
+      })
+    }
+  }
+
+  export class CheckPaymentsPayloadError extends AppError {
+    constructor() {
+      super("Check payments payload", {
+        [Lang.EN]: "It was not possible to map the payment data from the payments.",
+        [Lang.PT_BR]: "Não foi possível mapear a entrada de dados dos pagamentos.",
+      })
+    }
+  }
+
+  export class NotAllowedCancelSaleTimeLimitExceedError extends AppError {
+    constructor() {
+      super("Not allowed cancel sale time limit exceed", {
+        [Lang.EN]:
+          "It is not possible to cancel this sale because the cancellation time limit has been exceeded.",
+        [Lang.PT_BR]:
+          "Não é possível cancelar essa venda pois o limite de tempo de cancelamento foi excedido.",
+      })
+    }
+  }
 }

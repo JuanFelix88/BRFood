@@ -1,7 +1,7 @@
 import { PaymentMethodWithFees } from "@/core/application/entities/PaymentMethod/PaymentMethodWithFees"
 import { MapperErrors } from "@/core/application/errors"
 import { CurrencyValue, DateTime, UUID } from "@/core/shared/entities"
-import { StaticClass } from "@/core/shared/utils"
+import { ParsePayload, StaticClass } from "@/core/shared/utils"
 
 export class PaymentMethodWithFeesMapper extends StaticClass {
   public static toDomain(raw: {
@@ -18,25 +18,26 @@ export class PaymentMethodWithFeesMapper extends StaticClass {
     author_id: string
     author_name: string
   }): PaymentMethodWithFees {
+    const dataProxy = ParsePayload.handleObjectMapper(raw)
     try {
       return {
-        id: Number(raw.id),
-        name: String(raw.name),
-        fees: raw.fees.map((fee) => ({
+        id: Number(dataProxy.id),
+        name: String(dataProxy.name),
+        fees: dataProxy.fees.map((fee) => ({
           id: Number(fee.id),
           fee: new CurrencyValue(fee.fee),
           createdAt: DateTime.fromDate(fee.created_at),
         })),
-        ownerCompanyId: Number(raw.owner_company_id),
+        ownerCompanyId: Number(dataProxy.owner_company_id),
         author: {
-          id: new UUID(raw.author_id),
-          name: String(raw.author_name),
+          id: new UUID(dataProxy.author_id),
+          name: String(dataProxy.author_name),
         },
-        updatedAt: DateTime.fromDate(raw.updated_at),
-        createdAt: DateTime.fromDate(raw.created_at),
+        updatedAt: DateTime.fromDate(dataProxy.updated_at),
+        createdAt: DateTime.fromDate(dataProxy.created_at),
       }
     } catch (error: any) {
-      throw new MapperErrors.MappingError(PaymentMethodWithFeesMapper, error.message)
+      throw new MapperErrors.MappingError(PaymentMethodWithFeesMapper, error)
     }
   }
 }

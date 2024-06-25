@@ -4,7 +4,7 @@ import { DateTime } from "@/core/shared/entities/DateTime"
 import { UUID } from "@/core/shared/entities/UUID"
 
 export namespace Sale {
-  export interface ProductItem {
+  export interface Product {
     productId: number
     productPriceId: number
     name: string
@@ -12,35 +12,16 @@ export namespace Sale {
     total: CurrencyValue
   }
 
-  export interface PaymentMethod {
-    paymentMethodId: number
-    paymentMethodFeeId: number
-    name: string
-    value: CurrencyValue
-  }
-
-  export interface ClientPayment {
-    id: number
-    clientId: number
-    clientName: string
-    saleValue: CurrencyValue
-    creditPayment?: {
-      lastCreditValue: CurrencyValue
-      newCreditValue: CurrencyValue
-    }
-    cancelledAt: DateTime
-  }
-
   export interface PaymentClientCredit {
     id: number
     client: {
       clientId: number
       clientName: string
-      creditPayment: {
-        saleValue: CurrencyValue
-        lastCreditValue: CurrencyValue
-        newCreditValue: CurrencyValue
-      }
+    }
+    creditPayment: {
+      clientCreditId: number
+      value: CurrencyValue
+      newClientCreditValue: CurrencyValue
     }
   }
 
@@ -73,19 +54,7 @@ export namespace Sale {
 
 export interface Sale {
   id: number
-  products: Sale.ProductItem[]
-  paymentMethods: Sale.PaymentMethod[]
-  total: CurrencyValue
-  note?: string
-  createdAt: DateTime
-  authorId: UUID
-  ownerCompanyId: number
-  cancelledAt?: DateTime
-}
-
-export interface Sale2 {
-  id: number
-  products: Sale.ProductItem[]
+  products: Sale.Product[]
   payments: Sale.Payment[]
   total: CurrencyValue
   note?: string

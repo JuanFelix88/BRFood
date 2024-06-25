@@ -283,7 +283,7 @@ export class PostgresPaymentMethodRepository implements PaymentMethodRepository 
             ON fees.payment_method_id = payment_methods.id AND fees.rn = 1
         WHERE payment_methods.id in (%L) AND payment_methods.owner_company_id = $1
     `,
-        id.map(({ paymentMethodId }) => paymentMethodId),
+        [...id.map(({ paymentMethodId }) => paymentMethodId), 0],
       ),
       [companyId],
     )
