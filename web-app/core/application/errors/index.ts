@@ -1,6 +1,6 @@
 export * from "./amount-value"
 export * from "./auth"
-export * from "./buecket-image"
+export * from "./bucket-image"
 export * from "./company-owner-transfer"
 export * from "./company"
 export * from "./email"

@@ -1,4 +1,4 @@
-import { BucketImageErrors } from "@/core/application/errors/buecket-image"
+import { BucketImageErrors } from "@/core/application/errors/bucket-image"
 import { Serializable } from "./Serializable"
 
 export class BucketImage implements Serializable {

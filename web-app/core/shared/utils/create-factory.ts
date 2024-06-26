@@ -1,7 +1,4 @@
-import {
-  globalInjectableList,
-  injectsDependencyList,
-} from "./dependency-injection"
+import { globalInjectableList, injectsDependencyList } from "./dependency-injection"
 
 export type Dependency = { name: string }
 
@@ -14,11 +11,9 @@ class Factory {
   ): InstanceType<T> {
     return new Proxy({} as InstanceType<T>, {
       get: (target: T, key: string) => {
-        const dependenciesMatcheds = this.dependencyList.filter(
-          (dependency) => {
-            return dependency.name.toLowerCase().includes(key.toLowerCase())
-          },
-        )
+        const dependenciesMatcheds = this.dependencyList.filter((dependency) => {
+          return dependency.name.toLowerCase().includes(key.toLowerCase())
+        })
 
         if (dependenciesMatcheds.length > 1) {
           throw new Error(
