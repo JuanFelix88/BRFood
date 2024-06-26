@@ -22,10 +22,26 @@ export namespace AuthToken {
 }
 
 export class AuthToken extends StaticClass {
-  public static readonly HEADER_NAME = "X-Auth-Token"
+  public static readonly HEADER_NAME = "x-auth-token"
 
   public static hasTokenNextRequest(req: NextRequest) {
     return req.headers.get(AuthToken.HEADER_NAME) !== null
+  }
+
+  public static hasTokenInHeaders(headers: Headers) {
+    return headers.get(AuthToken.HEADER_NAME) !== null
+  }
+
+  public static getTokenFromHeaders(headers: Headers) {
+    return headers.get(AuthToken.HEADER_NAME)!
+  }
+
+  public static signTokenInHeaders(headers: Headers, token: string) {
+    return headers.set(AuthToken.HEADER_NAME, token)
+  }
+
+  public static signTokenInHeadersObject(headers: object, token: string) {
+    Object.defineProperty(headers, AuthToken.HEADER_NAME, { value: token })
   }
 
   public static getFromNextRequest(req: NextRequest) {

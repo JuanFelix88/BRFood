@@ -3,6 +3,7 @@ declare global {
     interface ProcessEnv {
       readonly IGNORE_DEPENDENCIES?: "YES"
       readonly CONSOLE_ERROR?: "YES"
+      readonly API_URL: string
       readonly JWT_SECRET: string
       readonly SUPABASE_URL: string
       readonly SUPABASE_KEY: string

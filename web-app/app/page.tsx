@@ -1,24 +1,21 @@
-import { GetResponse } from '@/core/shared/utils/get-response';
-import Image from "next/image";
-import type { GET } from '@/app/api/v1/products/route'
 import { MethodsExceptions } from '@/core/shared/utils/methods-exceptions';
+import { API } from '@/core/infra/http/api';
 
 export default async function Home() {
-  const resp = await fetch("http://localhost:3000/api/v1/products")
+  const { data } = await API.get("/api/v1/companies/[company_id]", { company_id: 27 })
 
-  const respProducts: GetResponse<typeof GET> = await resp.json()
-
-  if (MethodsExceptions.isError(respProducts)) {
+  if (MethodsExceptions.isError(data)) {
     return (
       <main>
-        <h1>{respProducts.errorMessage}</h1>
+        <h1>{data.errorMessage}</h1>
       </main>
     );
   }
 
+
   return (
     <main>
-      {respProducts.map((product) => (product)).join(", ")}
+      {JSON.stringify(data)}
     </main>
   );
 }

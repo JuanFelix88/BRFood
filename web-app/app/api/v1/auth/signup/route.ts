@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
       authToken: token,
       company,
       user,
-    } = await BRFood.signUpUser.handle({
+    } = await BRFood.signupUser.handle({
       email: new Email(email),
       password,
       companyName,
