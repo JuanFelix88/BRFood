@@ -94,6 +94,32 @@
           // "close": true
         },
         "group": "build"
+      },
+      {
+        "label": "Refresh Api",
+        "command": "cd ./web-app && node ./scripts/create-api-routes.mjs",
+        "type": "shell",
+        "args": [],
+        "problemMatcher": ["$tsc"],
+        "presentation": {
+          "reveal": "silent",
+          "panel": "shared"
+          // "close": true
+        },
+        "group": "build"
+      },
+      {
+        "label": "Refresh all",
+        "command": "cd ./web-app && node ./scripts/pre-build.mjs",
+        "type": "shell",
+        "args": [],
+        "problemMatcher": ["$tsc"],
+        "presentation": {
+          "reveal": "silent",
+          "panel": "shared"
+          // "close": true
+        },
+        "group": "build"
       }
     ],
     "inputs": [
