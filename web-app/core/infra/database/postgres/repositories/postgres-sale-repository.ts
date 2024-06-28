@@ -2,7 +2,7 @@ import { Sale } from "@/core/application/entities/Sale/Sale"
 import { SaleErrors } from "@/core/application/errors/sale"
 import { SaleRepository } from "@/core/application/repositories/sale-repository"
 import { PostgresService } from "@/core/infra/services/postgres"
-import { ArrayCountAll } from "@/core/shared/entities/ArrayCountAll"
+import { ArrayCA } from "@/core/shared/entities/ArrayCountAll"
 import { UUID } from "@/core/shared/entities/UUID"
 import { injectable } from "@/core/shared/utils/dependency-injection"
 import f from "pg-format"
@@ -270,7 +270,7 @@ export class PostgresSaleRepository implements SaleRepository {
     companyId: number,
     offset: number,
     limit: number,
-  ): Promise<ArrayCountAll<Sale>> {
+  ): Promise<ArrayCA<Sale>> {
     const { rows: sales } = await PostgresService.query<{
       id: number
       note?: string
@@ -359,9 +359,9 @@ export class PostgresSaleRepository implements SaleRepository {
       [companyId, offset, limit],
     )
 
-    const count = ArrayCountAll.countAll(sales)
+    const count = ArrayCA.countAll(sales)
 
-    return ArrayCountAll.fromArray(sales.map(SaleMapper.toDomain), count)
+    return ArrayCA.fromArray(sales.map(SaleMapper.toDomain), count)
   }
 
   public async cancel(saleId: number, authorId: UUID): Promise<void> {

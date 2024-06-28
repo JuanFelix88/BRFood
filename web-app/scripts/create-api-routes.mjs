@@ -85,6 +85,7 @@ routes.forEach(
 const file = `
 ${importsHeader}
 
+import { Serializable } from '@/core/shared/entities'
 import type { NextRequest, NextResponse } from 'next/server'
 export type MethodsObject<GET, POST, PUT, PATCH, DELETE> = { 
   GET: GET; POST: POST; PUT: PUT; PATCH: PATCH; DELETE: DELETE 
@@ -95,7 +96,11 @@ export type GetOfPut<T>    = T extends MethodsObject<unknown, unknown, infer R, 
 export type GetOfPatch<T>  = T extends MethodsObject<unknown, unknown, unknown, infer R, unknown> ? R : never
 export type GetOfDelete<T> = T extends MethodsObject<unknown, unknown, unknown, unknown, infer R> ? R : never
 type InferParams<T> = T extends (first: NextRequest, second: { params: infer R }) => unknown ? { [T in keyof R]: number | string | boolean } : undefined
-export type GetResponse<T extends (...args: any) => any> = ReturnType<T> extends Promise<NextResponse<infer J>> ? J : never
+export type GetInferredSerializable<T> =
+  T extends Serializable ? GetInferredSerializable<ReturnType<T["toJSON"]>> :
+  T extends { [A in keyof T]: Serializable | number | null | string | boolean | object } ? { [A in keyof T]: GetInferredSerializable<T[A]> } : 
+  T
+export type GetResponse<T extends (...args: any) => any> = ReturnType<T> extends Promise<NextResponse<infer J>> ? GetInferredSerializable<J> : never
 
 export interface RS {
   ${RSs.join("\n  ")}

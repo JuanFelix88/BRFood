@@ -3,6 +3,7 @@ import * as V1AuthSignin from "@/app/api/v1/auth/signin/route"
 import * as V1AuthSignup from "@/app/api/v1/auth/signup/route"
 import * as V1Companies from "@/app/api/v1/companies/route"
 import * as V1CompaniesCompanyIdAuthorizedUsers from "@/app/api/v1/companies/[company_id]/authorized-users/route"
+import * as V1CompaniesCompanyIdClients from "@/app/api/v1/companies/[company_id]/clients/route"
 import * as V1CompaniesCompanyIdOwnerOwnerEmail from "@/app/api/v1/companies/[company_id]/owner/[owner_email]/route"
 import * as V1CompaniesCompanyIdPaymentMethods from "@/app/api/v1/companies/[company_id]/payment-methods/route"
 import * as V1CompaniesCompanyIdProducts from "@/app/api/v1/companies/[company_id]/products/route"
@@ -17,6 +18,7 @@ import * as V1Products from "@/app/api/v1/products/route"
 import * as V1ProductsProductId from "@/app/api/v1/products/[product_id]/route"
 import * as V1SalesSaleId from "@/app/api/v1/sales/[sale_id]/route"
 
+import { Serializable } from '@/core/shared/entities'
 import type { NextRequest, NextResponse } from 'next/server'
 export type MethodsObject<GET, POST, PUT, PATCH, DELETE> = { 
   GET: GET; POST: POST; PUT: PUT; PATCH: PATCH; DELETE: DELETE 
@@ -27,7 +29,11 @@ export type GetOfPut<T>    = T extends MethodsObject<unknown, unknown, infer R, 
 export type GetOfPatch<T>  = T extends MethodsObject<unknown, unknown, unknown, infer R, unknown> ? R : never
 export type GetOfDelete<T> = T extends MethodsObject<unknown, unknown, unknown, unknown, infer R> ? R : never
 type InferParams<T> = T extends (first: NextRequest, second: { params: infer R }) => unknown ? { [T in keyof R]: number | string | boolean } : undefined
-export type GetResponse<T extends (...args: any) => any> = ReturnType<T> extends Promise<NextResponse<infer J>> ? J : never
+export type GetInferredSerializable<T> =
+  T extends Serializable ? GetInferredSerializable<ReturnType<T["toJSON"]>> :
+  T extends { [A in keyof T]: Serializable | number | null | string | boolean | object } ? { [A in keyof T]: GetInferredSerializable<T[A]> } : 
+  T
+export type GetResponse<T extends (...args: any) => any> = ReturnType<T> extends Promise<NextResponse<infer J>> ? GetInferredSerializable<J> : never
 
 export interface RS {
   
@@ -36,6 +42,7 @@ export interface RS {
 export interface GETS {
   "/api/test": "/api/test"
   "/api/v1/companies": "/api/v1/companies"
+  "/api/v1/companies/[company_id]/clients": "/api/v1/companies/[company_id]/clients"
   "/api/v1/companies/[company_id]/payment-methods": "/api/v1/companies/[company_id]/payment-methods"
   "/api/v1/companies/[company_id]/products": "/api/v1/companies/[company_id]/products"
   "/api/v1/companies/[company_id]": "/api/v1/companies/[company_id]"
@@ -82,6 +89,7 @@ export interface Params {
   "/api/v1/auth/signup": MethodsObject<any, InferParams<typeof V1AuthSignup.POST>, any, any, any>
   "/api/v1/companies": MethodsObject<InferParams<typeof V1Companies.GET>, InferParams<typeof V1Companies.POST>, any, any, any>
   "/api/v1/companies/[company_id]/authorized-users": MethodsObject<any, InferParams<typeof V1CompaniesCompanyIdAuthorizedUsers.POST>, any, any, any>
+  "/api/v1/companies/[company_id]/clients": MethodsObject<InferParams<typeof V1CompaniesCompanyIdClients.GET>, any, any, any, any>
   "/api/v1/companies/[company_id]/owner/[owner_email]": MethodsObject<any, any, InferParams<typeof V1CompaniesCompanyIdOwnerOwnerEmail.PUT>, any, any>
   "/api/v1/companies/[company_id]/payment-methods": MethodsObject<InferParams<typeof V1CompaniesCompanyIdPaymentMethods.GET>, InferParams<typeof V1CompaniesCompanyIdPaymentMethods.POST>, any, any, any>
   "/api/v1/companies/[company_id]/products": MethodsObject<InferParams<typeof V1CompaniesCompanyIdProducts.GET>, InferParams<typeof V1CompaniesCompanyIdProducts.POST>, any, any, any>
@@ -103,6 +111,7 @@ export interface Bodies {
   "/api/v1/auth/signup": MethodsObject<any, V1AuthSignup.POST.Body, any, any, any>
   "/api/v1/companies": MethodsObject<any, V1Companies.POST.Body, any, any, any>
   "/api/v1/companies/[company_id]/authorized-users": MethodsObject<any, V1CompaniesCompanyIdAuthorizedUsers.POST.Body, any, any, any>
+  "/api/v1/companies/[company_id]/clients": MethodsObject<any, any, any, any, any>
   "/api/v1/companies/[company_id]/owner/[owner_email]": MethodsObject<any, any, any, any, any>
   "/api/v1/companies/[company_id]/payment-methods": MethodsObject<any, V1CompaniesCompanyIdPaymentMethods.POST.Body, any, any, any>
   "/api/v1/companies/[company_id]/products": MethodsObject<any, V1CompaniesCompanyIdProducts.POST.Body, any, any, any>
@@ -124,6 +133,7 @@ export interface Returns {
   "/api/v1/auth/signup": MethodsObject<any, GetResponse<typeof V1AuthSignup.POST>, any, any, any>
   "/api/v1/companies": MethodsObject<GetResponse<typeof V1Companies.GET>, GetResponse<typeof V1Companies.POST>, any, any, any>
   "/api/v1/companies/[company_id]/authorized-users": MethodsObject<any, GetResponse<typeof V1CompaniesCompanyIdAuthorizedUsers.POST>, any, any, any>
+  "/api/v1/companies/[company_id]/clients": MethodsObject<GetResponse<typeof V1CompaniesCompanyIdClients.GET>, any, any, any, any>
   "/api/v1/companies/[company_id]/owner/[owner_email]": MethodsObject<any, any, GetResponse<typeof V1CompaniesCompanyIdOwnerOwnerEmail.PUT>, any, any>
   "/api/v1/companies/[company_id]/payment-methods": MethodsObject<GetResponse<typeof V1CompaniesCompanyIdPaymentMethods.GET>, GetResponse<typeof V1CompaniesCompanyIdPaymentMethods.POST>, any, any, any>
   "/api/v1/companies/[company_id]/products": MethodsObject<GetResponse<typeof V1CompaniesCompanyIdProducts.GET>, GetResponse<typeof V1CompaniesCompanyIdProducts.POST>, any, any, any>

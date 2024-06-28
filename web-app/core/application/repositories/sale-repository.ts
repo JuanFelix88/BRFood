@@ -1,5 +1,5 @@
 import { Sale } from "@/core/application/entities/Sale/Sale"
-import { ArrayCountAll } from "@/core/shared/entities/ArrayCountAll"
+import { ArrayCA } from "@/core/shared/entities/ArrayCountAll"
 import { CurrencyValue } from "@/core/shared/entities/CurrencyValue"
 import { UUID } from "@/core/shared/entities/UUID"
 
@@ -44,7 +44,7 @@ export abstract class SaleRepository {
     companyId: number,
     offset: number,
     limit: number,
-  ): Promise<ArrayCountAll<Sale>>
+  ): Promise<ArrayCA<Sale>>
   public abstract hasSalesByProductId(productId: number): Promise<boolean>
   public abstract cancel(saleId: number, authorId: UUID): Promise<void>
 }

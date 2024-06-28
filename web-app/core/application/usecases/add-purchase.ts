@@ -2,14 +2,25 @@ import { AmountValue } from "@/core/shared/entities/AmountValue"
 import { CurrencyValue } from "@/core/shared/entities/CurrencyValue"
 import { Usecase } from "@/core/shared/entities/Usecase"
 import { injectable } from "@/core/shared/utils/dependency-injection"
-import { PurchaseErrors } from "../errors/purchase"
 import { PurchaseRepository } from "../repositories/purchase-repository"
 import { RawMaterialRepository } from "../repositories/raw-material-repository"
 
-interface AddPurchaseData {
-  rawMaterialId: number
-  amount: AmountValue
-  unitPrice: CurrencyValue
+export namespace AddPurchase {
+  export interface Payload {
+    products: AddPurchase.Product[]
+    paymentMethods: AddPurchase.PaymentMethod[]
+  }
+
+  export interface Product {
+    amount: AmountValue
+    productId: number
+    unitPrice: CurrencyValue
+  }
+
+  export interface PaymentMethod {
+    paymentMethodId: number
+    payValue: CurrencyValue
+  }
 }
 
 @injectable()
@@ -19,17 +30,5 @@ export class AddPurchase implements Usecase {
     private readonly purchaseRepository: PurchaseRepository,
   ) {}
 
-  public async handle({ amount, rawMaterialId, unitPrice }: AddPurchaseData): Promise<void> {
-    if (!(await this.rawMaterialRepository.exists(rawMaterialId))) {
-      throw new PurchaseErrors.RawMaterialNotFound(rawMaterialId)
-    }
-
-    if (unitPrice.isNegative()) {
-      throw new PurchaseErrors.UnitPriceIsNegative()
-    }
-
-    const cost = new CurrencyValue(unitPrice.int * amount.int)
-
-    await this.purchaseRepository.add(cost, unitPrice, amount, rawMaterialId)
-  }
+  public async handle({}: AddPurchase.Payload): Promise<void> {}
 }

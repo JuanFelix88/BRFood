@@ -1,4 +1,4 @@
-import { ArrayCountAll } from "@/core/shared/entities/ArrayCountAll"
+import { ArrayCA } from "@/core/shared/entities/ArrayCountAll"
 import { BucketImage } from "@/core/shared/entities/BucketImage"
 import { CurrencyValue } from "@/core/shared/entities/CurrencyValue"
 import { UUID } from "@/core/shared/entities/UUID"
@@ -36,7 +36,7 @@ export abstract class ProductRepository {
     companyId: number,
     offset: number,
     limit: number,
-  ): Promise<ArrayCountAll<Product>>
+  ): Promise<ArrayCA<Product>>
 
   public abstract listByUserIdRelativeToOwnerCompany(userId: string): Promise<Product[]>
 

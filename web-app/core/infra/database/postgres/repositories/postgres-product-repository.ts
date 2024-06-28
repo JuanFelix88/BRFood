@@ -2,7 +2,7 @@ import { Product } from "@/core/application/entities/Product/Product"
 import { ProductErrors } from "@/core/application/errors/product"
 import { ProductRepository } from "@/core/application/repositories/product-repository"
 import { PostgresService } from "@/core/infra/services/postgres"
-import { ArrayCountAll } from "@/core/shared/entities/ArrayCountAll"
+import { ArrayCA } from "@/core/shared/entities/ArrayCountAll"
 import { injectable } from "@/core/shared/utils/dependency-injection"
 import { ProductMapper } from "../mappers/product-mapper"
 
@@ -261,7 +261,7 @@ export class PostgresProductRepository implements ProductRepository {
     companyId: number,
     offset: number,
     limit: number,
-  ): Promise<ArrayCountAll<Product>> {
+  ): Promise<ArrayCA<Product>> {
     const { rows: rowsListProducts } = await PostgresService.query<{
       id: number
       name: string
@@ -305,7 +305,7 @@ export class PostgresProductRepository implements ProductRepository {
 
     const count = rowsListProducts[0]?.full_count ?? 0
 
-    return ArrayCountAll.fromArray(rowsListProducts.map(ProductMapper.toDomain), count)
+    return ArrayCA.fromArray(rowsListProducts.map(ProductMapper.toDomain), count)
   }
 
   public async listByUserIdRelativeToOwnerCompany(userId: string): Promise<Product[]> {

@@ -1,5 +1,5 @@
 import { AuthToken } from "@/core/shared/entities"
-import { StaticClass } from "@/core/shared/utils"
+import { StrictStaticClass } from "@/core/shared/utils"
 import { StatusCodes } from "http-status-codes"
 import type * as Routes from "./routes"
 
@@ -16,10 +16,10 @@ interface ReturnRequest<T> {
   status: StatusCodes
 }
 
-export class API extends StaticClass {
-  public static TOKEN: string | null = this.getLocalToken()
+export class API extends StrictStaticClass {
+  private static TOKEN: string | null = this.getLocalToken()
 
-  public static getLocalToken(): string | null {
+  private static getLocalToken(): string | null {
     try {
       return localStorage.getItem("x-auth-token") ?? null
     } catch {
@@ -27,7 +27,7 @@ export class API extends StaticClass {
     }
   }
 
-  public static defineToken(token: string) {
+  private static defineToken(token: string) {
     API.TOKEN = token
     try {
       localStorage.setItem("x-auth-token", token)

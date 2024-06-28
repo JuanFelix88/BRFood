@@ -11,6 +11,7 @@ import { DeclineCompanyTransferOwner } from "@/core/application/usecases/decline
 import { DeleteCompanyTransferOwner } from "@/core/application/usecases/delete-company-transfer-owner"
 import { DeletePaymentMethodById } from "@/core/application/usecases/delete-payment-method-by-id"
 import { DeleteProductById } from "@/core/application/usecases/delete-product-by-id"
+import { GetClientsByCompanyId } from "@/core/application/usecases/get-clients-by-company-id"
 import { GetCompaniesByUser } from "@/core/application/usecases/get-companies-by-user"
 import { GetCompanyById } from "@/core/application/usecases/get-company-by-id"
 import { GetCompanySales } from "@/core/application/usecases/get-company-sales"
@@ -50,6 +51,7 @@ class Main {
     public readonly deleteCompanyTransferOwner: DeleteCompanyTransferOwner,
     public readonly deletePaymentMethodById: DeletePaymentMethodById,
     public readonly deleteProductById: DeleteProductById,
+    public readonly getClientsByCompanyId: GetClientsByCompanyId,
     public readonly getCompaniesByUser: GetCompaniesByUser,
     public readonly getCompanyById: GetCompanyById,
     public readonly getCompanySales: GetCompanySales,

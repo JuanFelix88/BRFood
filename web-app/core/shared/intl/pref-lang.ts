@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from "next/server"
-import { Lang } from "./lang"
+import { NextRequest } from "next/server"
 import { AppError } from "../entities/AppError"
 import { IntlMessage } from "../entities/IntlMessage"
+import { Lang } from "./lang"
 
 export class PrefLang {
   public static readonly DEFAULT = Lang.PT_BR

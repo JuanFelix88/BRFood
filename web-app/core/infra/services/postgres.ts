@@ -114,7 +114,7 @@ const pool = new Pool({
   password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_DATABASE,
   keepAlive: true,
-  idleTimeoutMillis: 15_000,
+  idleTimeoutMillis: 20_000,
   max: 5,
   min: 1,
   types: { getTypeParser },

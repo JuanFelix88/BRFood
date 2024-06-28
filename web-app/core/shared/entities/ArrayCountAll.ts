@@ -1,20 +1,18 @@
 import { StaticClass } from "../utils/static-class"
 
 /**
+ * ### Array With Count All
  * This class is important to have a database return standard
  * with the Count reference of all lines, for pagination.
  * @public
  */
-export class ArrayCountAll<T> extends StaticClass {
-  public static is(target: any): target is ArrayCountAll<any> {
-    return target instanceof ArrayCountAll
+export class ArrayCA<T> extends StaticClass {
+  public static is(target: any): target is ArrayCA<any> {
+    return target instanceof ArrayCA
   }
 
-  public static fromArray<B extends any[]>(
-    list: B,
-    countTotal: number,
-  ): ArrayCountAll<B[0]> {
-    return new ArrayCountAll(list, countTotal)
+  public static fromArray<B extends any[]>(list: B, countTotal: number): ArrayCA<B[0]> {
+    return new ArrayCA(list, countTotal)
   }
 
   public static countAll(rows: { full_count: number }[]): number {

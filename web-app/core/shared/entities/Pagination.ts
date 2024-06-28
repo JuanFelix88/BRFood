@@ -1,7 +1,7 @@
 import { PaginationErrors } from "@/core/application/errors/pagination"
 import { NextRequest } from "next/server"
 import { StaticClass } from "../utils/static-class"
-import { ArrayCountAll } from "./ArrayCountAll"
+import { ArrayCA } from "./ArrayCountAll"
 
 class Throws {
   constructor(private readonly self: Pagination) {}
@@ -39,8 +39,8 @@ export class Pagination extends StaticClass {
 
   public readonly throws = new Throws(this)
 
-  public defineHeader(headers: Headers, arr: ArrayCountAll<unknown>) {
-    if (ArrayCountAll.is(arr)) {
+  public defineHeader(headers: Headers, arr: ArrayCA<unknown>) {
+    if (ArrayCA.is(arr)) {
       headers.set("X-Total-Count", `${arr.total()}`)
       return
     }
@@ -48,7 +48,7 @@ export class Pagination extends StaticClass {
     throw new PaginationErrors.NotPossibleToGenerateXCountTotalHeaderError()
   }
 
-  public getHeaderWithXTotalCount(arr: ArrayCountAll<unknown>) {
+  public getHeaderWithXTotalCount(arr: ArrayCA<unknown>) {
     const headers = new Headers()
     this.defineHeader(headers, arr)
 

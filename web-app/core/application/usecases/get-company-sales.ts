@@ -1,4 +1,4 @@
-import { ArrayCountAll } from "@/core/shared/entities/ArrayCountAll"
+import { ArrayCA } from "@/core/shared/entities/ArrayCountAll"
 import { Pagination } from "@/core/shared/entities/Pagination"
 import { Usecase } from "@/core/shared/entities/Usecase"
 import { UUID } from "@/core/shared/entities/UUID"
@@ -19,7 +19,7 @@ export class GetCompanySales implements Usecase {
     companyId: number,
     userId: UUID,
     pagination: Pagination,
-  ): Promise<ArrayCountAll<Sale>> {
+  ): Promise<ArrayCA<Sale>> {
     pagination.throws.ifLimitIsGreaterThan(100)
 
     if (!Number.isInteger(companyId)) {

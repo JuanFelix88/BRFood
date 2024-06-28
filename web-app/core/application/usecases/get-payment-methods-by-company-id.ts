@@ -1,4 +1,4 @@
-import { ArrayCountAll } from "@/core/shared/entities/ArrayCountAll"
+import { ArrayCA } from "@/core/shared/entities/ArrayCountAll"
 import { Pagination } from "@/core/shared/entities/Pagination"
 import { Usecase } from "@/core/shared/entities/Usecase"
 import { UUID } from "@/core/shared/entities/UUID"
@@ -19,7 +19,7 @@ export class GetPaymentMethodsByCompanyId implements Usecase {
     companyId: number,
     userId: UUID,
     pagination: Pagination,
-  ): Promise<ArrayCountAll<PaymentMethod>> {
+  ): Promise<ArrayCA<PaymentMethod>> {
     pagination.throws.ifLimitIsGreaterThan(50)
 
     if (userId instanceof UUID === false) {

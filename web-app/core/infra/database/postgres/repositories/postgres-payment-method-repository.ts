@@ -2,7 +2,7 @@ import { PaymentMethod } from "@/core/application/entities/PaymentMethod/Payment
 import { PaymentMethodErrors } from "@/core/application/errors/payment-method"
 import { PaymentMethodRepository } from "@/core/application/repositories/payment-method-repository"
 import { PostgresService } from "@/core/infra/services/postgres"
-import { ArrayCountAll } from "@/core/shared/entities/ArrayCountAll"
+import { ArrayCA } from "@/core/shared/entities/ArrayCountAll"
 import { injectable } from "@/core/shared/utils/dependency-injection"
 import f from "pg-format"
 import { PaymentMethodMapper } from "../mappers/payment-method-mapper"
@@ -333,9 +333,9 @@ export class PostgresPaymentMethodRepository implements PaymentMethodRepository 
       [companyId, offset, limit],
     )
 
-    const count = ArrayCountAll.countAll(rows)
+    const count = ArrayCA.countAll(rows)
 
-    return ArrayCountAll.fromArray(rows.map(PaymentMethodMapper.toDomain), count)
+    return ArrayCA.fromArray(rows.map(PaymentMethodMapper.toDomain), count)
   }
 
   public async delete(paymentMethodId: number): Promise<void> {

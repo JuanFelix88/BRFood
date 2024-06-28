@@ -1,28 +1,27 @@
-import { AmountValue } from "@/core/shared/entities/AmountValue"
 import { CurrencyValue } from "@/core/shared/entities/CurrencyValue"
 import { DateTime } from "@/core/shared/entities/DateTime"
 import { UUID } from "@/core/shared/entities/UUID"
 
-interface PurchaseRawMaterial {
-  rawMaterialId: number
-  rawMaterialUnitPriceId: number
-  itemName: string
-  unitPrice: CurrencyValue
-  amount: AmountValue
-}
+export namespace Purchase {
+  export interface Product {
+    id: number
+    cost: CurrencyValue
+    costId: number
+  }
 
-interface PurchasePaymentMethod {
-  paymentMethodId: number
-  value: CurrencyValue
+  export interface PaymentMethod {
+    paymentMethodId: number
+    value: CurrencyValue
+  }
 }
 
 export interface Purchase {
   id: number
-  rawMaterials: PurchaseRawMaterial[]
-  cost: CurrencyValue
-  paymentMethods: PurchasePaymentMethod[]
+  totalCost: CurrencyValue
   authorId: UUID
+  products: Purchase.Product[]
+  paymentMethods: Purchase.PaymentMethod[]
+  createdAt: DateTime
   cancelAuthorId?: UUID
   cancelledAt?: DateTime
-  createdAt: DateTime
 }

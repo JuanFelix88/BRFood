@@ -1,4 +1,4 @@
-import { ArrayCountAll } from "@/core/shared/entities/ArrayCountAll"
+import { ArrayCA } from "@/core/shared/entities/ArrayCountAll"
 import { CurrencyValue } from "@/core/shared/entities/CurrencyValue"
 import { UUID } from "@/core/shared/entities/UUID"
 import { PaymentMethod } from "../entities/PaymentMethod/PaymentMethod"
@@ -24,7 +24,7 @@ export abstract class PaymentMethodRepository {
     companyId: number,
     offset: number,
     limit: number,
-  ): Promise<ArrayCountAll<PaymentMethod>>
+  ): Promise<ArrayCA<PaymentMethod>>
   public abstract update(
     paymentMethodId: number,
     payload: PaymentMethodRepository.AddPayload,

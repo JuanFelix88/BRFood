@@ -1,9 +1,10 @@
-import { CurrencyValue, DateTime, UUID } from "@/core/shared/entities"
+import { CurrencyValue, DateTime, Email, UUID } from "@/core/shared/entities"
 
 export interface Client {
+  id: number
   userId: UUID
   name: string
-  email: string
+  email: Email
   companyId: number
   lastCredit: CurrencyValue
   createdAt: DateTime

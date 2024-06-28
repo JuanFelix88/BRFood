@@ -1,9 +1,12 @@
-import { MethodsExceptions } from '@/core/shared/utils/methods-exceptions';
+import { API } from "@/core/infra/http"
+import { MethodsExceptions } from '@/core/shared/utils'
 
 export default async function Home() {
-  return (
-    <main>
-      OI!
-    </main>
-  );
+  const { data } = await API.get("/api/v1/companies/[company_id]/clients", {company_id: 27})
+
+  if (MethodsExceptions.isError(data)) {
+    return <main>{data.errorMessage}</main>
+  }
+
+  return <main>OI!</main>
 }
