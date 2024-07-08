@@ -1,4 +1,4 @@
-import { AppError } from "@/core/shared/entities"
+import { AppError } from "@/core/shared/entities/AppError"
 import { Lang } from "@/core/shared/intl"
 import { StatusCodes } from "http-status-codes"
 

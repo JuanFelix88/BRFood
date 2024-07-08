@@ -5,6 +5,7 @@ import { ZodError } from "zod"
 import { AppError } from "../entities/AppError"
 import { Lang } from "../intl/lang"
 import { PrefLang } from "../intl/pref-lang"
+import { HttpResponse } from "./http-response"
 import { StaticClass } from "./static-class"
 
 const DEFAULT_ERROR = {
@@ -41,42 +42,37 @@ export class MethodsExceptions extends StaticClass {
 
     if (error instanceof ZodError) {
       const errorMessage = ZOD_ERROR[prefLang.lang]
-      return NextResponse.json(
+      return HttpResponse.from(req).json(
         {
           errorMessage,
           issues: error.flatten().formErrors,
         },
-        {
-          status: StatusCodes.BAD_REQUEST,
-        },
+        StatusCodes.BAD_REQUEST,
       )
     }
 
     if (error instanceof MapperErrors.MappingError) {
-      return NextResponse.json(
+      return HttpResponse.from(req).json(
         {
           errorMessage: prefLang.messageFromError(error).errorMessage,
           issues: error.issues!,
         },
-        {
-          status: StatusCodes.BAD_REQUEST,
-        },
+        StatusCodes.BAD_REQUEST,
       )
     }
 
     if (error instanceof AppError) {
-      return NextResponse.json(prefLang.messageFromError(error), {
-        status: error.statusCode || StatusCodes.BAD_REQUEST,
-      })
+      return HttpResponse.from(req).json(
+        prefLang.messageFromError(error),
+        error.statusCode || StatusCodes.BAD_REQUEST,
+      )
     }
 
-    return NextResponse.json(
+    return HttpResponse.from(req).json(
       {
         errorMessage: DEFAULT_ERROR[prefLang.lang],
       },
-      {
-        status: StatusCodes.INTERNAL_SERVER_ERROR,
-      },
+      StatusCodes.INTERNAL_SERVER_ERROR,
     )
   }
 

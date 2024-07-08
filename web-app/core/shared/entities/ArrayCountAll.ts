@@ -34,10 +34,6 @@ export class ArrayCA<T> extends StaticClass {
     return this.countTotal
   }
 
-  public toJSON() {
-    return this.list
-  }
-
   public toArray(): T[] {
     return this.list
   }

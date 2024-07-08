@@ -107,8 +107,6 @@ export class PostgresUserRepository implements UserRepository {
       ["", ...emails.map((email) => email.complete)],
     )
 
-    console.log(query)
-
     const { rows: rowsUsers } = await PostgresService.query<{
       id: string
       name: string

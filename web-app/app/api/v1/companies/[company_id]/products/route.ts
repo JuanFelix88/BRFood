@@ -3,9 +3,10 @@ import { AuthToken } from "@/core/shared/entities/AuthToken"
 import { CurrencyValue } from "@/core/shared/entities/CurrencyValue"
 import { InternalImage } from "@/core/shared/entities/Image"
 import { Pagination } from "@/core/shared/entities/Pagination"
+import { HttpResponse } from "@/core/shared/utils/http-response"
 import { MethodsExceptions } from "@/core/shared/utils/methods-exceptions"
 import { StatusCodes } from "http-status-codes"
-import { NextRequest, NextResponse } from "next/server"
+import { NextRequest } from "next/server"
 
 export async function GET(req: NextRequest, cxt: { params: { company_id: string } }) {
   try {
@@ -15,9 +16,11 @@ export async function GET(req: NextRequest, cxt: { params: { company_id: string 
 
     const products = await BRFood.getProductsByCompanyId.handle(companyId, userId, pagination)
 
-    return NextResponse.json(products, {
-      headers: pagination.getHeaderWithXTotalCount(products),
-    })
+    return HttpResponse.from(req).json(
+      products.toArray(),
+      StatusCodes.OK,
+      pagination.getHeaderWithXTotalCount(products),
+    )
   } catch (error) {
     return MethodsExceptions.handleError(req, error)
   }
@@ -38,7 +41,7 @@ export async function POST(req: NextRequest, cxt: { params: { company_id: string
       coverImage: InternalImage.fromBase64(imgBase64, extensionImage),
     })
 
-    return NextResponse.json(products, { status: StatusCodes.CREATED })
+    return HttpResponse.from(req).json(products, StatusCodes.CREATED)
   } catch (error) {
     return MethodsExceptions.handleError(req, error)
   }

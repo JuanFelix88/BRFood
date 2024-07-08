@@ -1,3 +1,4 @@
+import { HTTPTransformable } from "../utils"
 import { StaticClass } from "../utils/static-class"
 import { Serializable } from "./Serializable"
 
@@ -7,6 +8,7 @@ type FromDBType<T extends Date | string | null | undefined> = T extends Date
     ? DateTime
     : undefined
 
+@HTTPTransformable()
 export class DateTime extends StaticClass implements Serializable {
   protected formatter = new Intl.DateTimeFormat("pt-BR", {
     year: "numeric",
@@ -20,6 +22,10 @@ export class DateTime extends StaticClass implements Serializable {
 
   constructor(private value: number) {
     super()
+
+    if (typeof value === "string") {
+      this.value = Date.parse(value)
+    }
   }
 
   public static fromDBType<T extends Date | string | null | undefined>(date: T): FromDBType<T> {

@@ -18,6 +18,9 @@ export class CurrencyValue implements Serializable {
       throw new TypeError("The value informed for currency conversion must be an integer")
     }
   }
+  fromJSON(): unknown {
+    throw new Error("Method not implemented.")
+  }
 
   public isNegative(): boolean {
     return this.intValue < 0

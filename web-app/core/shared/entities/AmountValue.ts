@@ -1,6 +1,8 @@
 import { AmountValueErrors } from "@/core/application/errors/amount-value"
+import { HTTPTransformable } from "../utils"
 import { Serializable } from "./Serializable"
 
+@HTTPTransformable()
 export class AmountValue implements Serializable {
   constructor(private readonly value: number) {
     if (this.value.toString().includes(".")) {

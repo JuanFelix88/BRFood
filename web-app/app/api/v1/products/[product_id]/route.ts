@@ -6,9 +6,10 @@ import { InternalImage } from "@/core/shared/entities/Image"
 import { IntlMessage } from "@/core/shared/entities/IntlMessage"
 import { Lang } from "@/core/shared/intl/lang"
 import { PrefLang } from "@/core/shared/intl/pref-lang"
+import { HttpResponse } from "@/core/shared/utils/http-response"
 import { MethodsExceptions } from "@/core/shared/utils/methods-exceptions"
 import { StatusCodes } from "http-status-codes"
-import { NextRequest, NextResponse } from "next/server"
+import { NextRequest } from "next/server"
 
 export async function GET(req: NextRequest, cxt: { params: { product_id: string } }) {
   try {
@@ -17,7 +18,7 @@ export async function GET(req: NextRequest, cxt: { params: { product_id: string 
 
     const product = await BRFood.getProductById.handle(productId, userId)
 
-    return NextResponse.json(product)
+    return HttpResponse.from(req).json(product)
   } catch (error) {
     return MethodsExceptions.handleError(req, error)
   }
@@ -38,9 +39,7 @@ export async function PUT(req: NextRequest, cxt: { params: { product_id: string 
       coverImage: InternalImage.fromBase64(imgBase64, extensionImage),
     })
 
-    return NextResponse.json(product, {
-      status: StatusCodes.OK,
-    })
+    return HttpResponse.from(req).json(product, StatusCodes.OK)
   } catch (error) {
     return MethodsExceptions.handleError(req, error)
   }
@@ -59,9 +58,7 @@ export async function DELETE(req: NextRequest, cxt: { params: { product_id: stri
       [Lang.PT_BR]: "Produto excluído com sucesso",
     })
 
-    return NextResponse.json(langpref.messageFromIntlMessage(message), {
-      status: StatusCodes.OK,
-    })
+    return HttpResponse.from(req).json(langpref.messageFromIntlMessage(message), StatusCodes.OK)
   } catch (error) {
     return MethodsExceptions.handleError(req, error)
   }

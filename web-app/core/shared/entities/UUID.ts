@@ -1,7 +1,9 @@
 import { UUIDErrors } from "@/core/application/errors/uuid"
 import { randomUUID } from "crypto"
+import { HTTPTransformable } from "../utils"
 import { Serializable } from "./Serializable"
 
+@HTTPTransformable()
 export class UUID implements Serializable {
   public static generate(): UUID {
     return new UUID(randomUUID())

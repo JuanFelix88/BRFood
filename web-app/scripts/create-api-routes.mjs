@@ -100,7 +100,7 @@ export type GetInferredSerializable<T> =
   T extends Serializable ? GetInferredSerializable<ReturnType<T["toJSON"]>> :
   T extends { [A in keyof T]: Serializable | number | null | string | boolean | object } ? { [A in keyof T]: GetInferredSerializable<T[A]> } : 
   T
-export type GetResponse<T extends (...args: any) => any> = ReturnType<T> extends Promise<NextResponse<infer J>> ? GetInferredSerializable<J> : never
+export type GetResponse<T extends (...args: any) => any> = ReturnType<T> extends Promise<NextResponse<infer J>> ? J : never
 
 export interface RS {
   ${RSs.join("\n  ")}

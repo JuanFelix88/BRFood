@@ -5,9 +5,10 @@ import { CurrencyValue } from "@/core/shared/entities/CurrencyValue"
 import { IntlMessage } from "@/core/shared/entities/IntlMessage"
 import { Lang } from "@/core/shared/intl/lang"
 import { PrefLang } from "@/core/shared/intl/pref-lang"
+import { HttpResponse } from "@/core/shared/utils/http-response"
 import { MethodsExceptions } from "@/core/shared/utils/methods-exceptions"
 import { StatusCodes } from "http-status-codes"
-import { NextRequest, NextResponse } from "next/server"
+import { NextRequest } from "next/server"
 
 export async function PUT(req: NextRequest, cxt: { params: { payment_method_id: string } }) {
   try {
@@ -21,7 +22,7 @@ export async function PUT(req: NextRequest, cxt: { params: { payment_method_id: 
       authorId: userId,
     })
 
-    return NextResponse.json(paymentMethod, { status: StatusCodes.OK })
+    return HttpResponse.from(req).json(paymentMethod, StatusCodes.OK)
   } catch (error) {
     return MethodsExceptions.handleError(req, error)
   }
@@ -40,9 +41,7 @@ export async function DELETE(req: NextRequest, cxt: { params: { payment_method_i
       [Lang.PT_BR]: "O método de pagamento foi excluído com sucesso",
     })
 
-    return NextResponse.json(prefLang.messageFromIntlMessage(message), {
-      status: StatusCodes.OK,
-    })
+    return HttpResponse.from(req).json(prefLang.messageFromIntlMessage(message), StatusCodes.OK)
   } catch (error) {
     return MethodsExceptions.handleError(req, error)
   }

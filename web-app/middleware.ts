@@ -1,5 +1,7 @@
 import { AuthToken } from "@/core/shared/entities/AuthToken"
+import { StatusCodes } from "http-status-codes"
 import { MiddlewareConfig, NextFetchEvent, NextRequest, NextResponse } from "next/server"
+import { HttpResponse } from "./core/shared/utils/http-response"
 
 const authRoutes = ["/api/v1/products", "/api/v1/products"]
 
@@ -10,11 +12,11 @@ export function isAuthenticatedRoute(request: NextRequest) {
 export function middleware(request: NextRequest, event: NextFetchEvent) {
   if (isAuthenticatedRoute(request)) {
     if (!AuthToken.hasTokenNextRequest(request)) {
-      return NextResponse.json(
+      return HttpResponse.from(request).json(
         {
           errorMessage: "Unauthorized",
         },
-        { status: 401 },
+        StatusCodes.UNAUTHORIZED,
       )
     }
   }

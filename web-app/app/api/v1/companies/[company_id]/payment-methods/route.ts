@@ -2,9 +2,10 @@ import { BRFood } from "@/core/infra/main/main"
 import { AuthToken } from "@/core/shared/entities/AuthToken"
 import { CurrencyValue } from "@/core/shared/entities/CurrencyValue"
 import { Pagination } from "@/core/shared/entities/Pagination"
+import { HttpResponse } from "@/core/shared/utils/http-response"
 import { MethodsExceptions } from "@/core/shared/utils/methods-exceptions"
 import { StatusCodes } from "http-status-codes"
-import { NextRequest, NextResponse } from "next/server"
+import { NextRequest } from "next/server"
 
 export async function GET(req: NextRequest, cxt: { params: { company_id: string } }) {
   try {
@@ -18,10 +19,11 @@ export async function GET(req: NextRequest, cxt: { params: { company_id: string 
       pagination,
     )
 
-    return NextResponse.json(paymentMethods, {
-      status: StatusCodes.OK,
-      headers: pagination.getHeaderWithXTotalCount(paymentMethods),
-    })
+    return HttpResponse.from(req).json(
+      paymentMethods.toArray(),
+      StatusCodes.OK,
+      pagination.getHeaderWithXTotalCount(paymentMethods),
+    )
   } catch (error) {
     return MethodsExceptions.handleError(req, error)
   }
@@ -40,7 +42,7 @@ export async function POST(req: NextRequest, cxt: { params: { company_id: string
       fee: new CurrencyValue(fee),
     })
 
-    return NextResponse.json(paymentMethod, { status: StatusCodes.OK })
+    return HttpResponse.from(req).json(paymentMethod, StatusCodes.OK)
   } catch (error) {
     return MethodsExceptions.handleError(req, error)
   }

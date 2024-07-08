@@ -1,8 +1,9 @@
 import { BRFood } from "@/core/infra/main/main"
 import { Email } from "@/core/shared/entities/Email"
+import { HttpResponse } from "@/core/shared/utils/http-response"
 import { MethodsExceptions } from "@/core/shared/utils/methods-exceptions"
 import { StatusCodes } from "http-status-codes"
-import { NextRequest, NextResponse } from "next/server"
+import { NextRequest } from "next/server"
 
 export async function POST(req: NextRequest) {
   try {
@@ -13,12 +14,7 @@ export async function POST(req: NextRequest) {
     const headers = authToken.createResponseHeaders()
     const user = await BRFood.getUserById.handle(authToken.userId)
 
-    return NextResponse.json(
-      {
-        user,
-      },
-      { status: StatusCodes.OK, headers },
-    )
+    return HttpResponse.from(req).json({ user }, StatusCodes.OK, headers)
   } catch (error) {
     return MethodsExceptions.handleError(req, error)
   }

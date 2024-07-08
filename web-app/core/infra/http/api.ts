@@ -1,5 +1,5 @@
 import { AuthToken } from "@/core/shared/entities"
-import { StrictStaticClass } from "@/core/shared/utils"
+import { HttpMapper, StrictStaticClass } from "@/core/shared/utils"
 import { StatusCodes } from "http-status-codes"
 import type * as Routes from "./routes"
 
@@ -21,7 +21,7 @@ export class API extends StrictStaticClass {
 
   private static getLocalToken(): string | null {
     try {
-      return localStorage.getItem("x-auth-token") ?? null
+      return localStorage.getItem(AuthToken.HEADER_NAME) ?? null
     } catch {
       return null
     }
@@ -30,7 +30,7 @@ export class API extends StrictStaticClass {
   private static defineToken(token: string) {
     API.TOKEN = token
     try {
-      localStorage.setItem("x-auth-token", token)
+      localStorage.setItem(AuthToken.HEADER_NAME, token)
     } catch {}
   }
 
@@ -136,6 +136,8 @@ export class API extends StrictStaticClass {
     const headers = options?.headers ?? (body ? { "Content-Type": "application/json" } : {})
     const headersToSend = new Headers()
 
+    headersToSend.append(HttpMapper.CONTENT_MAPPER, "accept")
+
     for (const [key, value] of Object.entries(headers)) {
       headersToSend.append(key, value)
     }
@@ -158,6 +160,7 @@ export class API extends StrictStaticClass {
 
     try {
       data = await response.json()
+      data = HttpMapper.decodeDataFromHeader(response.headers, data)
     } catch {
       data = { errorMessage: "Não há retorno de dados" }
     }

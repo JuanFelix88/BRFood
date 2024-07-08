@@ -1,20 +1,18 @@
 import { BRFood } from "@/core/infra/main/main"
-import { Email } from "@/core/shared/entities"
-import { AuthToken } from "@/core/shared/entities/AuthToken"
+import { AuthToken, Email } from "@/core/shared/entities"
+import { HttpResponse } from "@/core/shared/utils/http-response"
 import { MethodsExceptions } from "@/core/shared/utils/methods-exceptions"
 import { StatusCodes } from "http-status-codes"
-import { NextRequest, NextResponse } from "next/server"
+import { NextRequest } from "next/server"
 import { z } from "zod"
 
 export async function GET(req: NextRequest) {
   try {
     const { userId } = AuthToken.getFromNextRequest(req)
 
-    const company = await BRFood.getCompaniesByUser.handle(userId)
+    const companies = await BRFood.getCompaniesByUser.handle(userId)
 
-    return NextResponse.json(company, {
-      status: StatusCodes.OK,
-    })
+    return HttpResponse.from(req).json(companies, StatusCodes.OK)
   } catch (error) {
     return MethodsExceptions.handleError(req, error)
   }
@@ -33,7 +31,7 @@ export async function POST(req: NextRequest) {
       userId,
     )
 
-    return NextResponse.json(newCompany, { status: StatusCodes.CREATED })
+    return HttpResponse.from(req).json(newCompany, StatusCodes.OK)
   } catch (error) {
     return MethodsExceptions.handleError(req, error)
   }

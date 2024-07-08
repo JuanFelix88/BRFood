@@ -1,8 +1,10 @@
 import { EmailErrors } from "@/core/application/errors/email"
+import { HTTPTransformable } from "../utils"
 import { Serializable } from "./Serializable"
 
 const EMAIL_REGEX = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/
 
+@HTTPTransformable()
 export class Email implements Serializable {
   constructor(private readonly value: string) {
     this.value = this.value.toLowerCase()

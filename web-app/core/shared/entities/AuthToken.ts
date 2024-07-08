@@ -69,7 +69,7 @@ export class AuthToken extends StaticClass {
       const decoded = jwt.verify(this.value, process.env.JWT_SECRET) as AuthToken.DecodedToken
 
       id = decoded.sub
-    } catch {
+    } catch (err) {
       throw new AuthErrors.ParsingJwtError()
     }
 

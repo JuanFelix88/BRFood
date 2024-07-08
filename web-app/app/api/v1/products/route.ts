@@ -2,17 +2,16 @@ import { BRFood } from "@/core/infra/main/main"
 import { AuthToken } from "@/core/shared/entities/AuthToken"
 import { CurrencyValue } from "@/core/shared/entities/CurrencyValue"
 import { InternalImage } from "@/core/shared/entities/Image"
+import { HttpResponse } from "@/core/shared/utils/http-response"
 import { MethodsExceptions } from "@/core/shared/utils/methods-exceptions"
-import { NextRequest, NextResponse } from "next/server"
+import { NextRequest } from "next/server"
 
 export async function GET(req: NextRequest) {
   try {
     const authToken = AuthToken.getFromNextRequest(req)
 
     const listProducts = await BRFood.getProductsByUserId.handle(authToken.userId)
-    return NextResponse.json(listProducts, {
-      status: 200,
-    })
+    return HttpResponse.from(req).json(listProducts, 200)
   } catch (error) {
     return MethodsExceptions.handleError(req, error)
   }
@@ -33,7 +32,7 @@ export async function POST(req: NextRequest) {
       profit: new CurrencyValue(0),
     })
 
-    return NextResponse.json(productCreated)
+    return HttpResponse.from(req).json(productCreated)
   } catch (error) {
     return MethodsExceptions.handleError(req, error)
   }

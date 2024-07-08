@@ -3,9 +3,10 @@ import { AmountValue } from "@/core/shared/entities/AmountValue"
 import { AuthToken } from "@/core/shared/entities/AuthToken"
 import { CurrencyValue } from "@/core/shared/entities/CurrencyValue"
 import { Pagination } from "@/core/shared/entities/Pagination"
+import { HttpResponse } from "@/core/shared/utils/http-response"
 import { MethodsExceptions } from "@/core/shared/utils/methods-exceptions"
 import { StatusCodes } from "http-status-codes"
-import { NextRequest, NextResponse } from "next/server"
+import { NextRequest } from "next/server"
 import { z } from "zod"
 
 export async function GET(req: NextRequest, cxt: { params: { company_id: string } }) {
@@ -16,10 +17,11 @@ export async function GET(req: NextRequest, cxt: { params: { company_id: string 
 
     const sales = await BRFood.getCompanySales.handle(companyId, userId, pagination)
 
-    return NextResponse.json(sales, {
-      status: StatusCodes.OK,
-      headers: pagination.getHeaderWithXTotalCount(sales),
-    })
+    return HttpResponse.from(req).json(
+      sales.toArray(),
+      StatusCodes.OK,
+      pagination.getHeaderWithXTotalCount(sales),
+    )
   } catch (error) {
     return MethodsExceptions.handleError(req, error)
   }
@@ -40,9 +42,7 @@ export async function POST(req: NextRequest, cxt: { params: { company_id: string
       note,
     })
 
-    return NextResponse.json(sale, {
-      status: StatusCodes.OK,
-    })
+    return HttpResponse.from(req).json(sale, StatusCodes.OK)
   } catch (error) {
     console.log(error)
     return MethodsExceptions.handleError(req, error)
